@@ -20,13 +20,14 @@ module if_id_reg#(
 );
 	always @(posedge clk) begin
                 if(rst) begin
-                        out_pc <= {BUS_WIDTH{1'b0}};
+                        out_pc    <= {BUS_WIDTH{1'b0}};
                         out_instr <= {INSTR_WIDTH{1'b0}};
                 end
-                else begin
-                        out_pc <= in_pc;
+                else if(!stall) begin
+                        out_pc    <= in_pc;
                         out_instr <= in_instr;
                 end
+                // when stall=1: hold current values (do nothing)
         end
 
 

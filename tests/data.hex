@@ -1,0 +1,3 @@
+// 32 KB of data memory initialised to zero.
+// $readmemh fills missing addresses with 0 so an empty file is enough,
+// but having this file avoids a Verilator "file not found" warning.

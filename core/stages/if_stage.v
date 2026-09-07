@@ -31,6 +31,9 @@ module if_stage#(
 	    reg [INSTR_WIDTH-1:0] mem [0:(1<<INSTR_MEM_LEN)-1];
 	    initial $readmemh("tests/program.hex", mem);
 	    assign instr = mem[word_addr];
-	`endif	
+	`else
+	    // Placeholder: synthesisable BRAM port will be connected here.
+	    assign instr = {INSTR_WIDTH{1'b0}};
+	`endif
 
 endmodule

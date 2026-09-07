@@ -11,7 +11,7 @@
 * mem_write = write TO memory
 * mem_read = read FROM memory
 * write_data = data to be written to memory
-*
+* funct3 = funct3 from instruction
 * rd = destination register in the event of regfile write
 * reg_write = 1 implies write to regfile (0 otherwise)
 * mem_to_reg = 1 implies regfile write data from MEM not ALU (0 ALU)
@@ -20,6 +20,7 @@ module id_ex_reg#(
 	parameter BUS_WIDTH = 64,
 	parameter INSTR_WIDTH = 32,
 	parameter ALU_SEL = 5,
+	parameter FUNCT3 = 3,
 	parameter REGFILE_LEN = 5
 )(
 	input wire clk,
@@ -28,6 +29,7 @@ module id_ex_reg#(
 
 	// From ID stage
 	input wire [INSTR_WIDTH-1:0] in_instr,
+	input wire [FUNCT3-1:0] in_funct3,
 	input wire [BUS_WIDTH-1:0] in_pc,
 	input wire [BUS_WIDTH-1:0] in_imm,
 	input wire [BUS_WIDTH-1:0] in_in1,
@@ -41,13 +43,13 @@ module id_ex_reg#(
 	input wire in_mem_read,
 	input wire [BUS_WIDTH-1:0] in_write_data,
 
-	input wire [BUS_WIDTH-1:0] in_alu_out,
 	input wire [REGFILE_LEN-1:0] in_rd,
 	input wire in_reg_write,
 	input wire in_mem_to_reg,
 
 	// To EX stage
 	output reg [INSTR_WIDTH-1:0] out_instr,
+	output reg [FUNCT3-1:0] out_funct3,
 	output reg [BUS_WIDTH-1:0] out_pc,
 	output reg [BUS_WIDTH-1:0] out_imm,
 	output reg [BUS_WIDTH-1:0] out_in1,
@@ -61,7 +63,6 @@ module id_ex_reg#(
 	output reg out_mem_read,
 	output reg [BUS_WIDTH-1:0] out_write_data,
 
-	output reg [BUS_WIDTH-1:0] out_alu_out,
 	output reg [REGFILE_LEN-1:0] out_rd,
 	output reg out_reg_write,
 	output reg out_mem_to_reg
@@ -69,6 +70,7 @@ module id_ex_reg#(
 	always @(posedge clk) begin
                 if(rst) begin
                         out_instr <= {INSTR_WIDTH{1'b0}};
+			out_funct3 <= 3'd0;
                         out_pc <= {BUS_WIDTH{1'b0}};
                         out_imm <= {BUS_WIDTH{1'b0}};
                         out_in1 <= {BUS_WIDTH{1'b0}};
@@ -82,13 +84,13 @@ module id_ex_reg#(
                         out_mem_read <= 1'b0;
                         out_write_data <= {BUS_WIDTH{1'b0}};
 
-                        out_alu_out <= {BUS_WIDTH{1'b0}};
                         out_rd <= {REGFILE_LEN{1'b0}};
                         out_reg_write <= 1'b0;
                         out_mem_to_reg <= 1'b0;
                 end
                 else begin
                         out_instr <= in_instr;
+			out_funct3 <= in_funct3;
                         out_pc <= in_pc;
                         out_imm <= in_imm;
                         out_in1 <= in_in1;
@@ -103,7 +105,6 @@ module id_ex_reg#(
                         out_mem_read <= in_mem_read;
                         out_write_data <= in_write_data;
 
-                        out_alu_out <= in_alu_out;
                         out_rd <= in_rd;
                         out_reg_write <= in_reg_write;
                         out_mem_to_reg <= in_mem_to_reg;

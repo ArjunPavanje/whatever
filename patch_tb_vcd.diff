@@ -1,0 +1,53 @@
+--- sim/tb_core.cpp
++++ sim/tb_core.cpp
+@@ -19,4 +19,7 @@
+ #include "Vcore_regfile.h"
+ #include "verilated.h"
++#if VM_TRACE
++#include <verilated_vcd_c.h>
++#endif
+ #include <cstdio>
+ #include <cstdint>
+@@ -25,8 +28,17 @@
+ // ---------- helpers ----------
+ static uint64_t sim_time = 0;
++#if VM_TRACE
++static VerilatedVcdC* tfp = nullptr;
++#endif
+ 
+ static void tick(Vcore* dut) {
+     dut->clk = 0; dut->eval(); 
++#if VM_TRACE
++    if (tfp) tfp->dump(sim_time);
++#endif
++    sim_time++;
++    dut->clk = 1; dut->eval(); 
++#if VM_TRACE
++    if (tfp) tfp->dump(sim_time);
++#endif
+     sim_time++;
+-    dut->clk = 1; dut->eval(); sim_time++;
+ }
+@@ -58,4 +70,11 @@
+     Vcore* dut = new Vcore;
+ 
++#if VM_TRACE
++    Verilated::traceEverOn(true);
++    tfp = new VerilatedVcdC;
++    dut->trace(tfp, 99);
++    tfp->open("sim/core_trace.vcd");
++#endif
++
+     // ---- Reset for 5 cycles ----
+     dut->rst = 1;
+@@ -95,4 +114,10 @@
+ 
+     dut->final();
++#if VM_TRACE
++    if (tfp) {
++        tfp->close();
++        delete tfp;
++    }
++#endif
+     delete dut;
+     return (fail_count > 0) ? 1 : 0;

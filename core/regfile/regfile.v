@@ -19,7 +19,7 @@ module regfile #(
 );
 	localparam ZERO = {BUS_WIDTH{1'b0}};
 
-	reg [BUS_WIDTH-1:0] reg_file [NUM_REGS-1:0];
+	reg [BUS_WIDTH-1:0] reg_file [NUM_REGS-1:0] /*verilator public*/;
 
 	always @(posedge clk) begin
 		if(write_en & (write_addr != 0)) begin

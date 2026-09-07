@@ -1,0 +1,19 @@
+--- sim/tb_core.cpp
++++ sim/tb_core.cpp
+@@ -19,2 +19,5 @@
+ #include "Vcore.h"           // Verilator-generated model header
++#include "Vcore_core.h"
++#include "Vcore_id_stage.h"
++#include "Vcore_regfile.h"
+ #include "verilated.h"
+@@ -34,3 +37,2 @@
+     // Verilator flattens the hierarchy; access via the DPI path:
+-    //   dut->core__DOT__id_stage_inst__DOT__regfile_inst__DOT__reg_file[idx]
+-    return dut->core__DOT__id_stage_inst__DOT__regfile_inst__DOT__reg_file[idx];
++    return dut->core->id_stage_inst->regfile_inst->reg_file[idx];
+ }
+@@ -38,3 +40,3 @@
+ static uint8_t read_dmem(Vcore* dut, int byte_idx) {
+-    return dut->core__DOT__mem_stage_inst__DOT__mem[byte_idx];
++    return dut->core->__PVT__mem_stage_inst__DOT__mem[byte_idx];
+ }

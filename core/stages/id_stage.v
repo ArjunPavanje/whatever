@@ -24,6 +24,7 @@ module id_stage #(
 	output wire mem_read,
 	output wire mem_write,
 	output wire mem_to_reg,
+	output wire [2:0] funct3,
 
 	output wire is_lui,
 	output wire is_auipc
@@ -34,6 +35,7 @@ module id_stage #(
     	wire [4:0] rs1_addr = instr[19:15];
     	wire [4:0] rs2_addr = instr[24:20];
     	assign rd_addr = instr[11:7];
+	assign funct3 = instr[14:12];
 
 	assign reg_write  = (opcode == 7'b0110011) || // R-type
                     (opcode == 7'b0010011) || // I-type ALU
@@ -50,14 +52,7 @@ module id_stage #(
         assign is_lui = (opcode == 7'b0110111);   
         assign is_auipc = (opcode == 7'b0010111);
 
-	assign alu_src = (opcode == 7'b0010011) || // I-type ALU
-                 (opcode == 7'b0000011) || // Load
-                 (opcode == 7'b0100011) || // Store
-                 (opcode == 7'b0010111) || // AUIPC
-                 (opcode == 7'b0110111) || // LUI  ← missing
-                 (opcode == 7'b1100111);   // JALR
-
-    	// Register File Instance
+	// Register File Instance
     	regfile #(
     	    .BUS_WIDTH(BUS_WIDTH),
         	.NUM_REGS(32)

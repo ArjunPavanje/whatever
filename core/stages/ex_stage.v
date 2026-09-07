@@ -11,16 +11,15 @@ module ex_stage #(
 	input wire [ALU_SEL-1:0] alu_sel,
 	input wire is_lui,
 	input wire is_auipc,
+	input wire [BUS_WIDTH-1:0] pc,
 
 	input wire alu_src,
-	input wire rst,
 
 	output wire [BUS_WIDTH-1:0] out 
 );
 
-	wire [6:0] opcode = pc[6:0];
 	wire [BUS_WIDTH-1:0] alu_op;
-	wire [BUS_WIDTH-1:0] alu_in1 = (is_lui) ? {BUS_WIDTH{1'b0}} : ((is_auipc) ? pc : in1)
+	wire [BUS_WIDTH-1:0] alu_in1 = (is_lui) ? {BUS_WIDTH{1'b0}} : ((is_auipc) ? pc : in1);
 	wire [BUS_WIDTH-1:0] alu_in2 = (alu_src) ? imm : in2;
 	alu #(
 		.BUS_WIDTH(BUS_WIDTH),

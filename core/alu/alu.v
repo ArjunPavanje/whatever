@@ -20,9 +20,6 @@ module alu #(
     wire [BUS_WIDTH-1:0] slt_out;
     wire [BUS_WIDTH-1:0] sltu_out;
     wire [BUS_WIDTH-1:0] mul_out;
-    wire [BUS_WIDTH-1:0] mulh_out;
-    wire [BUS_WIDTH-1:0] mulsu_out;
-    wire [BUS_WIDTH-1:0] mulu_out;
 
     // Standard Arithmetic and Logic Sub-modules
     add #(
@@ -107,37 +104,20 @@ module alu #(
         .out(sltu_out)
     );
 
-    // M-Extension Multiplier Sub-modules
+    // M-Extension: one combined mul instance handles MUL/MULH/MULHSU/MULHU.
+    // (alu_sel - 10) gives 0,1,2,3 which is alu_funct3 expected by mul.v:
+    //   0 -> MUL    (lower half, signed x signed)
+    //   1 -> MULH   (upper half, signed x signed)
+    //   2 -> MULHSU (upper half, signed x unsigned)
+    //   3 -> MULHU  (upper half, unsigned x unsigned)
+    wire [1:0] mul_funct3 = alu_sel[1:0] ^ 2'b10; // maps 10->00, 11->01, 12->10, 13->11
     mul #(
         .BUS_WIDTH(BUS_WIDTH)
     ) mul_alu (
         .in1(in1),
         .in2(in2),
+        .alu_funct3(mul_funct3),
         .out(mul_out)
-    );
-
-    mulh #(
-        .BUS_WIDTH(BUS_WIDTH)
-    ) mulh_alu (
-        .in1(in1),
-        .in2(in2),
-        .out(mulh_out)
-    );
-
-    mulsu #(
-        .BUS_WIDTH(BUS_WIDTH)
-    ) mulsu_alu (
-        .in1(in1),
-        .in2(in2),
-        .out(mulsu_out)
-    );
-
-    mulu #(
-        .BUS_WIDTH(BUS_WIDTH)
-    ) mulu_alu (
-        .in1(in1),
-        .in2(in2),
-        .out(mulu_out)
     );
 
     // Output MUX mapping alu_sel control codes to selected result
@@ -153,10 +133,10 @@ module alu #(
             5'd7:  out = sra_out;
             5'd8:  out = slt_out;
             5'd9:  out = sltu_out;
-            5'd10: out = mul_out;
-            5'd11: out = mulh_out;
-            5'd12: out = mulsu_out;
-            5'd13: out = mulu_out;
+            5'd10: out = mul_out;  // MUL    (funct3=00)
+            5'd11: out = mul_out;  // MULH   (funct3=01)
+            5'd12: out = mul_out;  // MULHSU (funct3=10)
+            5'd13: out = mul_out;  // MULHU  (funct3=11)
             default: out = {BUS_WIDTH{1'b0}};
         endcase
     end

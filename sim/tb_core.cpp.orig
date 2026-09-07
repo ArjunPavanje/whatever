@@ -1,0 +1,98 @@
+// tb_core.cpp — Verilator testbench for the RV32/64 pipeline core
+//
+// Tests performed (no hazard unit yet, instructions are NOP-padded):
+//   1. ADDI x1, x0, 10   → x1 = 10
+//   2. ADDI x2, x0, 20   → x2 = 20
+//   3. ADD  x3, x1, x2   → x3 = 30  (after 3 NOPs)
+//   4. ADDI x4, x0, 10   → x4 = 10
+//   5. MUL  x5, x1, x2   → x5 = 200 (after 3 NOPs)
+//   6. SW   x3, 0(x0)    → store 30 to data[0]
+//   7. LW   x6, 0(x0)    → load 30 into x6 (after 3 NOPs)
+//
+// Build & run:
+//   see sim/run_sim.sh
+
+#include "Vcore.h"           // Verilator-generated model header
+#include "verilated.h"
+#include <cstdio>
+#include <cstdint>
+#include <cstring>
+
+// ---------- helpers ----------
+static uint64_t sim_time = 0;
+
+static void tick(Vcore* dut) {
+    dut->clk = 0; dut->eval(); sim_time++;
+    dut->clk = 1; dut->eval(); sim_time++;
+}
+
+// Read a register directly from the regfile inside id_stage inside core.
+// Verilator exposes hierarchical signals through the generated class.
+// Path: core -> id_stage_inst -> regfile_inst -> reg_file
+static uint64_t read_reg(Vcore* dut, int idx) {
+    // Verilator flattens the hierarchy; access via the DPI path:
+    //   dut->core__DOT__id_stage_inst__DOT__regfile_inst__DOT__reg_file[idx]
+    return dut->core__DOT__id_stage_inst__DOT__regfile_inst__DOT__reg_file[idx];
+}
+
+static uint8_t read_dmem(Vcore* dut, int byte_idx) {
+    return dut->core__DOT__mem_stage_inst__DOT__mem[byte_idx];
+}
+
+// ---------- test framework ----------
+static int pass_count = 0, fail_count = 0;
+
+static void check(const char* name, uint64_t got, uint64_t expected) {
+    if (got == expected) {
+        printf("[PASS] %-20s  got=0x%016llX\n", name, (unsigned long long)got);
+        pass_count++;
+    } else {
+        printf("[FAIL] %-20s  got=0x%016llX  expected=0x%016llX\n",
+               name,
+               (unsigned long long)got,
+               (unsigned long long)expected);
+        fail_count++;
+    }
+}
+
+int main(int argc, char** argv) {
+    Verilated::commandArgs(argc, argv);
+
+    Vcore* dut = new Vcore;
+
+    // ---- Reset for 5 cycles ----
+    dut->rst = 1;
+    dut->clk = 0;
+    for (int i = 0; i < 5; i++) tick(dut);
+    dut->rst = 0;
+
+    // ---- Run enough cycles to drain the full program through the pipeline ----
+    // Program is 18 instructions; pipeline is 5 stages deep → need ~23+ cycles.
+    // Give 60 cycles for safety.
+    for (int i = 0; i < 60; i++) tick(dut);
+
+    // ---- Inspect results ----
+    printf("\n=== Register file checks ===\n");
+    check("x1 (ADDI 10)",   read_reg(dut, 1), 10);
+    check("x2 (ADDI 20)",   read_reg(dut, 2), 20);
+    check("x3 (ADD 30)",    read_reg(dut, 3), 30);
+    check("x4 (ADDI 10)",   read_reg(dut, 4), 10);
+    check("x5 (MUL 200)",   read_reg(dut, 5), 200);
+    check("x6 (LW 30)",     read_reg(dut, 6), 30);
+
+    printf("\n=== Data memory checks ===\n");
+    // SW x3 stored 30 (0x1E) as a word at address 0
+    // In RV32 mode (BUS_WIDTH=32) a word is 4 bytes;
+    // in RV64 mode (BUS_WIDTH=64) we used SW (funct3=010) which is still 4 bytes.
+    uint32_t dmem_word = (uint32_t)read_dmem(dut, 0)
+                       | ((uint32_t)read_dmem(dut, 1) << 8)
+                       | ((uint32_t)read_dmem(dut, 2) << 16)
+                       | ((uint32_t)read_dmem(dut, 3) << 24);
+    check("dmem[0..3] word", dmem_word, 30);
+
+    printf("\n=== Summary: %d passed, %d failed ===\n\n", pass_count, fail_count);
+
+    dut->final();
+    delete dut;
+    return (fail_count > 0) ? 1 : 0;
+}
