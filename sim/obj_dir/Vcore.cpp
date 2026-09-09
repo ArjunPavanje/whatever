@@ -79,6 +79,8 @@ void Vcore::_eval(Vcore__Syms* __restrict vlSymsp) {
         vlSymsp->TOP__core._sequent__TOP__core__3(vlSymsp);
         vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__1(vlSymsp);
         vlSymsp->TOP__core__id_stage_inst__regfile_inst._sequent__TOP__core__id_stage_inst__regfile_inst__2(vlSymsp);
+        vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__2(vlSymsp);
+        vlSymsp->TOP__core._sequent__TOP__core__4(vlSymsp);
     }
     // Final
     vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;

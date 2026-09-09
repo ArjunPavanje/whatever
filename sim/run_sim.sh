@@ -42,6 +42,7 @@ verilator \
     "${REPO_ROOT}/core/alu/alu.v" \
     "${REPO_ROOT}/core/regfile/regfile.v" \
     "${REPO_ROOT}/core/stages/immgen.v" \
+    "${REPO_ROOT}/core/stages/branch_unit.v" \
     "${REPO_ROOT}/core/stages/ex_stage.v" \
     "${REPO_ROOT}/core/stages/id_stage.v" \
     "${REPO_ROOT}/core/stages/if_stage.v" \

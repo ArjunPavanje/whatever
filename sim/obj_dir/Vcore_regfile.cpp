@@ -42,4 +42,9 @@ VL_INLINE_OPT void Vcore_regfile::_sequent__TOP__core__id_stage_inst__regfile_in
                             >> 0x14U))) ? 0ULL : vlSymsp->TOP__core__id_stage_inst__regfile_inst.reg_file
            [(0x1fU & (vlSymsp->TOP__core.__PVT__ifid_instr 
                       >> 0x14U))]);
+    vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+        = ((0U == (0x1fU & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                            >> 0xfU))) ? 0ULL : vlSymsp->TOP__core__id_stage_inst__regfile_inst.reg_file
+           [(0x1fU & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                      >> 0xfU))]);
 }

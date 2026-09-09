@@ -13,175 +13,6 @@ VL_INLINE_OPT void Vcore_id_stage::_sequent__TOP__core__id_stage_inst__1(Vcore__
     VL_DEBUG_IF(VL_DBG_MSGF("+        Vcore_id_stage::_sequent__TOP__core__id_stage_inst__1\n"); );
     Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlSymsp->TOP__core__id_stage_inst.__PVT__imm = 
-        ((0x40U & vlSymsp->TOP__core.__PVT__ifid_instr)
-          ? ((0x20U & vlSymsp->TOP__core.__PVT__ifid_instr)
-              ? ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                 ? 0ULL : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                            ? ((1U 
-                                                & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                                ? (
-                                                   (0xfffffffffffff000ULL 
-                                                    & ((- (QData)((IData)(
-                                                                          (1U 
-                                                                           & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                              >> 0x1fU))))) 
-                                                       << 0xcU)) 
-                                                   | (QData)((IData)(
-                                                                     (0xfffU 
-                                                                      & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                         >> 0x14U)))))
-                                                : 0ULL)
-                                            : 0ULL)))
-                  : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                      ? ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                          ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                              ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                  ? ((0xffffffffffe00000ULL 
-                                      & ((- (QData)((IData)(
-                                                            (1U 
-                                                             & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                >> 0x1fU))))) 
-                                         << 0x15U)) 
-                                     | (QData)((IData)(
-                                                       ((0x100000U 
-                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                            >> 0xbU)) 
-                                                        | ((0xff000U 
-                                                            & vlSymsp->TOP__core.__PVT__ifid_instr) 
-                                                           | ((0x800U 
-                                                               & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                  >> 9U)) 
-                                                              | (0x7feU 
-                                                                 & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                    >> 0x14U))))))))
-                                  : 0ULL) : 0ULL) : 0ULL)
-                      : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                          ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                              ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                  ? ((0xfffffffffffff000ULL 
-                                      & ((- (QData)((IData)(
-                                                            (1U 
-                                                             & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                >> 0x1fU))))) 
-                                         << 0xcU)) 
-                                     | (QData)((IData)(
-                                                       (0xfffU 
-                                                        & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                           >> 0x14U)))))
-                                  : 0ULL) : 0ULL) : 
-                         ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                           ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                               ? ((0xffffffffffffe000ULL 
-                                   & ((- (QData)((IData)(
-                                                         (1U 
-                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                             >> 0x1fU))))) 
-                                      << 0xdU)) | (QData)((IData)(
-                                                                  ((0x1000U 
-                                                                    & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                       >> 0x13U)) 
-                                                                   | ((0x800U 
-                                                                       & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                          << 4U)) 
-                                                                      | ((0x7e0U 
-                                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                             >> 0x14U)) 
-                                                                         | (0x1eU 
-                                                                            & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                               >> 7U))))))))
-                               : 0ULL) : 0ULL)))) : 0ULL)
-          : ((0x20U & vlSymsp->TOP__core.__PVT__ifid_instr)
-              ? ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                 ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                         ? (((QData)((IData)(
-                                                             (- (IData)(
-                                                                        (1U 
-                                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                            >> 0x1fU)))))) 
-                                             << 0x20U) 
-                                            | (QData)((IData)(
-                                                              (0xfffff000U 
-                                                               & vlSymsp->TOP__core.__PVT__ifid_instr))))
-                                         : 0ULL) : 0ULL)
-                                 : 0ULL)) : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                              ? 0ULL
-                                              : ((4U 
-                                                  & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                                  ? 0ULL
-                                                  : 
-                                                 ((2U 
-                                                   & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                                   ? 
-                                                  ((1U 
-                                                    & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                                    ? 
-                                                   ((0xfffffffffffff000ULL 
-                                                     & ((- (QData)((IData)(
-                                                                           (1U 
-                                                                            & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                               >> 0x1fU))))) 
-                                                        << 0xcU)) 
-                                                    | (QData)((IData)(
-                                                                      ((0xfe0U 
-                                                                        & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                           >> 0x14U)) 
-                                                                       | (0x1fU 
-                                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                             >> 7U))))))
-                                                    : 0ULL)
-                                                   : 0ULL))))
-              : ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                 ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                         ? (((QData)((IData)(
-                                                             (- (IData)(
-                                                                        (1U 
-                                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                            >> 0x1fU)))))) 
-                                             << 0x20U) 
-                                            | (QData)((IData)(
-                                                              (0xfffff000U 
-                                                               & vlSymsp->TOP__core.__PVT__ifid_instr))))
-                                         : 0ULL) : 0ULL)
-                                 : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                         ? ((0xfffffffffffff000ULL 
-                                             & ((- (QData)((IData)(
-                                                                   (1U 
-                                                                    & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                       >> 0x1fU))))) 
-                                                << 0xcU)) 
-                                            | (QData)((IData)(
-                                                              (0xfffU 
-                                                               & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                  >> 0x14U)))))
-                                         : 0ULL) : 0ULL)))
-                  : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                 ? 0ULL : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                            ? ((1U 
-                                                & vlSymsp->TOP__core.__PVT__ifid_instr)
-                                                ? (
-                                                   (0xfffffffffffff000ULL 
-                                                    & ((- (QData)((IData)(
-                                                                          (1U 
-                                                                           & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                              >> 0x1fU))))) 
-                                                       << 0xcU)) 
-                                                   | (QData)((IData)(
-                                                                     (0xfffU 
-                                                                      & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                                         >> 0x14U)))))
-                                                : 0ULL)
-                                            : 0ULL))))));
     vlSymsp->TOP__core__id_stage_inst.__PVT__alu_sel 
         = (((((((((0xcc00U == ((0x1fc00U & (vlSymsp->TOP__core.__PVT__ifid_instr 
                                             << 0xaU)) 
@@ -592,4 +423,201 @@ VL_INLINE_OPT void Vcore_id_stage::_sequent__TOP__core__id_stage_inst__1(Vcore__
                                                       ? 9U
                                                       : 0U)))))))
                     : 0U)));
+    vlSymsp->TOP__core__id_stage_inst.__PVT__imm = 
+        ((0x40U & vlSymsp->TOP__core.__PVT__ifid_instr)
+          ? ((0x20U & vlSymsp->TOP__core.__PVT__ifid_instr)
+              ? ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                 ? 0ULL : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                            ? ((1U 
+                                                & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                                ? (
+                                                   (0xfffffffffffff000ULL 
+                                                    & ((- (QData)((IData)(
+                                                                          (1U 
+                                                                           & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                              >> 0x1fU))))) 
+                                                       << 0xcU)) 
+                                                   | (QData)((IData)(
+                                                                     (0xfffU 
+                                                                      & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                         >> 0x14U)))))
+                                                : 0ULL)
+                                            : 0ULL)))
+                  : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                      ? ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                          ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                              ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                  ? ((0xffffffffffe00000ULL 
+                                      & ((- (QData)((IData)(
+                                                            (1U 
+                                                             & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                >> 0x1fU))))) 
+                                         << 0x15U)) 
+                                     | (QData)((IData)(
+                                                       ((0x100000U 
+                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                            >> 0xbU)) 
+                                                        | ((0xff000U 
+                                                            & vlSymsp->TOP__core.__PVT__ifid_instr) 
+                                                           | ((0x800U 
+                                                               & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                  >> 9U)) 
+                                                              | (0x7feU 
+                                                                 & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                    >> 0x14U))))))))
+                                  : 0ULL) : 0ULL) : 0ULL)
+                      : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                          ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                              ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                  ? ((0xfffffffffffff000ULL 
+                                      & ((- (QData)((IData)(
+                                                            (1U 
+                                                             & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                >> 0x1fU))))) 
+                                         << 0xcU)) 
+                                     | (QData)((IData)(
+                                                       (0xfffU 
+                                                        & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                           >> 0x14U)))))
+                                  : 0ULL) : 0ULL) : 
+                         ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                           ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                               ? ((0xffffffffffffe000ULL 
+                                   & ((- (QData)((IData)(
+                                                         (1U 
+                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                             >> 0x1fU))))) 
+                                      << 0xdU)) | (QData)((IData)(
+                                                                  ((0x1000U 
+                                                                    & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                       >> 0x13U)) 
+                                                                   | ((0x800U 
+                                                                       & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                          << 4U)) 
+                                                                      | ((0x7e0U 
+                                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                             >> 0x14U)) 
+                                                                         | (0x1eU 
+                                                                            & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                               >> 7U))))))))
+                               : 0ULL) : 0ULL)))) : 0ULL)
+          : ((0x20U & vlSymsp->TOP__core.__PVT__ifid_instr)
+              ? ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                 ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                         ? (((QData)((IData)(
+                                                             (- (IData)(
+                                                                        (1U 
+                                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                            >> 0x1fU)))))) 
+                                             << 0x20U) 
+                                            | (QData)((IData)(
+                                                              (0xfffff000U 
+                                                               & vlSymsp->TOP__core.__PVT__ifid_instr))))
+                                         : 0ULL) : 0ULL)
+                                 : 0ULL)) : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                              ? 0ULL
+                                              : ((4U 
+                                                  & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                                  ? 0ULL
+                                                  : 
+                                                 ((2U 
+                                                   & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                                   ? 
+                                                  ((1U 
+                                                    & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                                    ? 
+                                                   ((0xfffffffffffff000ULL 
+                                                     & ((- (QData)((IData)(
+                                                                           (1U 
+                                                                            & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                               >> 0x1fU))))) 
+                                                        << 0xcU)) 
+                                                    | (QData)((IData)(
+                                                                      ((0xfe0U 
+                                                                        & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                           >> 0x14U)) 
+                                                                       | (0x1fU 
+                                                                          & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                             >> 7U))))))
+                                                    : 0ULL)
+                                                   : 0ULL))))
+              : ((0x10U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                  ? ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                 ? ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                         ? (((QData)((IData)(
+                                                             (- (IData)(
+                                                                        (1U 
+                                                                         & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                            >> 0x1fU)))))) 
+                                             << 0x20U) 
+                                            | (QData)((IData)(
+                                                              (0xfffff000U 
+                                                               & vlSymsp->TOP__core.__PVT__ifid_instr))))
+                                         : 0ULL) : 0ULL)
+                                 : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                     ? ((1U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                         ? ((0xfffffffffffff000ULL 
+                                             & ((- (QData)((IData)(
+                                                                   (1U 
+                                                                    & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                       >> 0x1fU))))) 
+                                                << 0xcU)) 
+                                            | (QData)((IData)(
+                                                              (0xfffU 
+                                                               & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                  >> 0x14U)))))
+                                         : 0ULL) : 0ULL)))
+                  : ((8U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                      ? 0ULL : ((4U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                 ? 0ULL : ((2U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                            ? ((1U 
+                                                & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                                ? (
+                                                   (0xfffffffffffff000ULL 
+                                                    & ((- (QData)((IData)(
+                                                                          (1U 
+                                                                           & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                              >> 0x1fU))))) 
+                                                       << 0xcU)) 
+                                                   | (QData)((IData)(
+                                                                     (0xfffU 
+                                                                      & (vlSymsp->TOP__core.__PVT__ifid_instr 
+                                                                         >> 0x14U)))))
+                                                : 0ULL)
+                                            : 0ULL))))));
+}
+
+VL_INLINE_OPT void Vcore_id_stage::_sequent__TOP__core__id_stage_inst__2(Vcore__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+        Vcore_id_stage::_sequent__TOP__core__id_stage_inst__2\n"); );
+    Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
+    vlSymsp->TOP__core__id_stage_inst.__PVT__misprediction 
+        = ((0x63U == (0x7fU & vlSymsp->TOP__core.__PVT__ifid_instr)) 
+           & ((0x4000U & vlSymsp->TOP__core.__PVT__ifid_instr)
+               ? ((0x2000U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                   ? ((0x1000U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                       ? (vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+                          >= vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2)
+                       : (vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+                          < vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2))
+                   : ((0x1000U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                       ? VL_GTES_IQQ(1,64,64, vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1, vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2)
+                       : VL_LTS_IQQ(1,64,64, vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1, vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2)))
+               : ((~ (vlSymsp->TOP__core.__PVT__ifid_instr 
+                      >> 0xdU)) & ((0x1000U & vlSymsp->TOP__core.__PVT__ifid_instr)
+                                    ? (vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+                                       != vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2)
+                                    : (vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+                                       == vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2)))));
+    vlSymsp->TOP__core__id_stage_inst.__PVT__is_j = 
+        (((0x6fU == (0x7fU & vlSymsp->TOP__core.__PVT__ifid_instr)) 
+          | (0x67U == (0x7fU & vlSymsp->TOP__core.__PVT__ifid_instr))) 
+         | (IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__misprediction));
 }

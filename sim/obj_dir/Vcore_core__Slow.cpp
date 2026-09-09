@@ -50,8 +50,8 @@ void Vcore_core::_initial__TOP__core__1(Vcore__Syms* __restrict vlSymsp) {
                  , 0, ~0ULL);
 }
 
-void Vcore_core::_settle__TOP__core__4(Vcore__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+      Vcore_core::_settle__TOP__core__4\n"); );
+void Vcore_core::_settle__TOP__core__5(Vcore__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+      Vcore_core::_settle__TOP__core__5\n"); );
     Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Variables
     WData/*127:0*/ __Vtemp16[4];
@@ -67,18 +67,79 @@ void Vcore_core::_settle__TOP__core__4(Vcore__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2 
         = ((IData)(vlSymsp->TOP__core.__PVT__idex_alu_src)
             ? vlSymsp->TOP__core.__PVT__idex_imm : vlSymsp->TOP__core.__PVT__idex_in2);
-    vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-        = ((IData)(vlSymsp->TOP__core.__PVT__idex_is_lui)
-            ? 0ULL : ((IData)(vlSymsp->TOP__core.__PVT__idex_is_auipc)
-                       ? vlSymsp->TOP__core.__PVT__idex_pc
-                       : vlSymsp->TOP__core.__PVT__idex_in1));
     vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes 
         = ((0U == (3U & (IData)(vlSymsp->TOP__core.__PVT__exmem_funct3)))
             ? 1U : ((1U == (3U & (IData)(vlSymsp->TOP__core.__PVT__exmem_funct3)))
                      ? 2U : ((2U == (3U & (IData)(vlSymsp->TOP__core.__PVT__exmem_funct3)))
                               ? 4U : 8U)));
-    vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_next 
-        = (4ULL + vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr);
+    vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+        = ((IData)(vlSymsp->TOP__core.__PVT__idex_is_lui)
+            ? 0ULL : ((IData)(vlSymsp->TOP__core.__PVT__idex_is_auipc)
+                       ? vlSymsp->TOP__core.__PVT__idex_pc
+                       : vlSymsp->TOP__core.__PVT__idex_in1));
+    vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read = 0ULL;
+    if ((0U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffffffffffff00ULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | (IData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                 [(0x7fffU & (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out))])));
+    }
+    if ((1U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffffffffff00ffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(1U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 8U));
+    }
+    if ((2U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffffffff00ffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(2U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x10U));
+    }
+    if ((3U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffffff00ffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(3U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x18U));
+    }
+    if ((4U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffff00ffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(4U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x20U));
+    }
+    if ((5U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffff00ffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(5U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x28U));
+    }
+    if ((6U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xff00ffffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(6U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x30U));
+    }
+    if ((7U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+            = ((0xffffffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
+               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
+                                  [(0x7fffU & ((IData)(7U) 
+                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
+                  << 0x38U));
+    }
     VL_EXTEND_WQ(128,64, __Vtemp16, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1);
     VL_EXTEND_WQ(128,64, __Vtemp17, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2);
     VL_MUL_W(4, __Vtemp18, __Vtemp16, __Vtemp17);
@@ -151,69 +212,6 @@ void Vcore_core::_settle__TOP__core__4(Vcore__Syms* __restrict vlSymsp) {
                 << 0x20U) | (QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[0U])))
             : (((QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[3U])) 
                 << 0x20U) | (QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[2U]))));
-    vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read = 0ULL;
-    if ((0U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffffffffffff00ULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | (IData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                 [(0x7fffU & (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out))])));
-    }
-    if ((1U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffffffffff00ffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(1U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 8U));
-    }
-    if ((2U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffffffff00ffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(2U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x10U));
-    }
-    if ((3U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffffff00ffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(3U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x18U));
-    }
-    if ((4U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffff00ffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(4U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x20U));
-    }
-    if ((5U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffff00ffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(5U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x28U));
-    }
-    if ((6U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xff00ffffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(6U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x30U));
-    }
-    if ((7U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-            = ((0xffffffffffffffULL & vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read) 
-               | ((QData)((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem
-                                  [(0x7fffU & ((IData)(7U) 
-                                               + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
-                  << 0x38U));
-    }
     vlSymsp->TOP__core.__Vtableidx1 = ((0x10U & (((8U 
                                                    & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
                                                    ? 
@@ -272,6 +270,7 @@ void Vcore_core::_ctor_var_reset() {
     __PVT__idex_in2 = VL_RAND_RESET_Q(64);
     __PVT__idex_write_data = VL_RAND_RESET_Q(64);
     __PVT__idex_alu_src = VL_RAND_RESET_I(1);
+    __PVT__idex_is_j = VL_RAND_RESET_I(1);
     __PVT__idex_is_lui = VL_RAND_RESET_I(1);
     __PVT__idex_is_auipc = VL_RAND_RESET_I(1);
     __PVT__idex_alu_sel = VL_RAND_RESET_I(5);

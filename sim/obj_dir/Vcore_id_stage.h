@@ -35,13 +35,19 @@ VL_MODULE(Vcore_id_stage) {
     VL_OUT8(__PVT__mem_write,0,0);
     VL_OUT8(__PVT__mem_to_reg,0,0);
     VL_OUT8(__PVT__funct3,2,0);
+    VL_OUT8(__PVT__is_j,0,0);
     VL_OUT8(__PVT__is_lui,0,0);
     VL_OUT8(__PVT__is_auipc,0,0);
     VL_IN(__PVT__instr,31,0);
     VL_IN64(__PVT__wb_data,63,0);
+    VL_IN64(__PVT__pc,63,0);
     VL_OUT64(__PVT__in1,63,0);
     VL_OUT64(__PVT__in2,63,0);
     VL_OUT64(__PVT__imm,63,0);
+    VL_OUT64(__PVT__pc_dst,63,0);
+    
+    // LOCAL SIGNALS
+    CData/*0:0*/ __PVT__misprediction;
     
     // INTERNAL VARIABLES
   private:
@@ -61,6 +67,7 @@ VL_MODULE(Vcore_id_stage) {
     void _ctor_var_reset() VL_ATTR_COLD;
   public:
     static void _sequent__TOP__core__id_stage_inst__1(Vcore__Syms* __restrict vlSymsp);
+    static void _sequent__TOP__core__id_stage_inst__2(Vcore__Syms* __restrict vlSymsp);
   private:
     static void traceInit(void* userp, VerilatedVcd* tracep, uint32_t code) VL_ATTR_COLD;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);

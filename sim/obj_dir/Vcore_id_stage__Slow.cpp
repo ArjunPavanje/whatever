@@ -34,6 +34,7 @@ void Vcore_id_stage::_ctor_var_reset() {
     __PVT__wb_en = VL_RAND_RESET_I(1);
     __PVT__wb_addr = VL_RAND_RESET_I(5);
     __PVT__wb_data = VL_RAND_RESET_Q(64);
+    __PVT__pc = VL_RAND_RESET_Q(64);
     __PVT__in1 = VL_RAND_RESET_Q(64);
     __PVT__in2 = VL_RAND_RESET_Q(64);
     __PVT__imm = VL_RAND_RESET_Q(64);
@@ -45,6 +46,9 @@ void Vcore_id_stage::_ctor_var_reset() {
     __PVT__mem_write = VL_RAND_RESET_I(1);
     __PVT__mem_to_reg = VL_RAND_RESET_I(1);
     __PVT__funct3 = VL_RAND_RESET_I(3);
+    __PVT__pc_dst = VL_RAND_RESET_Q(64);
+    __PVT__is_j = VL_RAND_RESET_I(1);
     __PVT__is_lui = VL_RAND_RESET_I(1);
     __PVT__is_auipc = VL_RAND_RESET_I(1);
+    __PVT__misprediction = VL_RAND_RESET_I(1);
 }

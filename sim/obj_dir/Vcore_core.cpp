@@ -38,9 +38,6 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__2(Vcore__Syms* __restrict vl
     SData/*14:0*/ __Vdlyvdim0__mem_stage_inst__DOT__mem__v6;
     SData/*14:0*/ __Vdlyvdim0__mem_stage_inst__DOT__mem__v7;
     // Body
-    if (((~ (IData)(vlTOPp->rst)) & (IData)(vlSymsp->TOP__core.__PVT__exmem_mem_write))) {
-        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__i = 8U;
-    }
     __Vdlyvset__mem_stage_inst__DOT__mem__v0 = 0U;
     __Vdlyvset__mem_stage_inst__DOT__mem__v1 = 0U;
     __Vdlyvset__mem_stage_inst__DOT__mem__v2 = 0U;
@@ -49,16 +46,19 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__2(Vcore__Syms* __restrict vl
     __Vdlyvset__mem_stage_inst__DOT__mem__v5 = 0U;
     __Vdlyvset__mem_stage_inst__DOT__mem__v6 = 0U;
     __Vdlyvset__mem_stage_inst__DOT__mem__v7 = 0U;
+    if (((~ (IData)(vlTOPp->rst)) & (IData)(vlSymsp->TOP__core.__PVT__exmem_mem_write))) {
+        vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__i = 8U;
+    }
     if (vlTOPp->rst) {
         vlSymsp->TOP__core.__PVT__idex_imm = 0ULL;
         vlSymsp->TOP__core.__PVT__idex_in2 = 0ULL;
+        vlSymsp->TOP__core.__PVT__idex_in1 = 0ULL;
         vlSymsp->TOP__core.__PVT__idex_instr = 0U;
-        vlSymsp->TOP__core.__PVT__idex_pc = 0ULL;
     } else {
         vlSymsp->TOP__core.__PVT__idex_imm = vlSymsp->TOP__core__id_stage_inst.__PVT__imm;
         vlSymsp->TOP__core.__PVT__idex_in2 = vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_2;
+        vlSymsp->TOP__core.__PVT__idex_in1 = vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1;
         vlSymsp->TOP__core.__PVT__idex_instr = vlSymsp->TOP__core.__PVT__ifid_instr;
-        vlSymsp->TOP__core.__PVT__idex_pc = vlSymsp->TOP__core.__PVT__ifid_pc;
     }
     vlSymsp->TOP__core.__PVT__idex_alu_src = ((~ (IData)(vlTOPp->rst)) 
                                               & (((((0x13U 
@@ -91,16 +91,6 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__2(Vcore__Syms* __restrict vl
                                                   == 
                                                   (0x7fU 
                                                    & vlSymsp->TOP__core.__PVT__ifid_instr)));
-    vlSymsp->TOP__core.__PVT__idex_in1 = ((IData)(vlTOPp->rst)
-                                           ? 0ULL : 
-                                          ((0U == (0x1fU 
-                                                   & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                      >> 0xfU)))
-                                            ? 0ULL : 
-                                           vlSymsp->TOP__core__id_stage_inst__regfile_inst.reg_file
-                                           [(0x1fU 
-                                             & (vlSymsp->TOP__core.__PVT__ifid_instr 
-                                                >> 0xfU))]));
     if (((~ (IData)(vlTOPp->rst)) & (IData)(vlSymsp->TOP__core.__PVT__exmem_mem_write))) {
         if ((0U < (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))) {
             __Vdlyvval__mem_stage_inst__DOT__mem__v0 
@@ -198,14 +188,9 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__2(Vcore__Syms* __restrict vl
         vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__mem[__Vdlyvdim0__mem_stage_inst__DOT__mem__v7] 
             = __Vdlyvval__mem_stage_inst__DOT__mem__v7;
     }
-    if (vlTOPp->rst) {
-        vlSymsp->TOP__core.__PVT__ifid_pc = 0ULL;
-        vlSymsp->TOP__core.__PVT__exmem_write_data = 0ULL;
-    } else {
-        vlSymsp->TOP__core.__PVT__ifid_pc = vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr;
-        vlSymsp->TOP__core.__PVT__exmem_write_data 
-            = vlSymsp->TOP__core.__PVT__idex_write_data;
-    }
+    vlSymsp->TOP__core.__PVT__exmem_write_data = ((IData)(vlTOPp->rst)
+                                                   ? 0ULL
+                                                   : vlSymsp->TOP__core.__PVT__idex_write_data);
     vlSymsp->TOP__core.__PVT__exmem_mem_write = ((~ (IData)(vlTOPp->rst)) 
                                                  & (IData)(vlSymsp->TOP__core.__PVT__idex_mem_write));
     vlSymsp->TOP__core.__PVT__idex_write_data = ((IData)(vlTOPp->rst)
@@ -232,6 +217,9 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
     WData/*127:0*/ __Vtemp12[4];
     WData/*127:0*/ __Vtemp13[4];
     // Body
+    vlSymsp->TOP__core.__PVT__memwb_alu_out = ((IData)(vlTOPp->rst)
+                                                ? 0ULL
+                                                : vlSymsp->TOP__core.__PVT__exmem_alu_out);
     vlSymsp->TOP__core.__PVT__memwb_reg_write = ((~ (IData)(vlTOPp->rst)) 
                                                  & (IData)(vlSymsp->TOP__core.__PVT__exmem_reg_write));
     vlSymsp->TOP__core.__PVT__memwb_rd = ((IData)(vlTOPp->rst)
@@ -239,10 +227,9 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
     vlSymsp->TOP__core.__PVT__memwb_mem_to_reg = ((~ (IData)(vlTOPp->rst)) 
                                                   & (IData)(vlSymsp->TOP__core.__PVT__exmem_mem_to_reg));
     if (vlTOPp->rst) {
-        vlSymsp->TOP__core.__PVT__memwb_alu_out = 0ULL;
         vlSymsp->TOP__core.__PVT__memwb_mem_out = 0ULL;
+        vlSymsp->TOP__core.__PVT__exmem_alu_out = 0ULL;
     } else {
-        vlSymsp->TOP__core.__PVT__memwb_alu_out = vlSymsp->TOP__core.__PVT__exmem_alu_out;
         vlSymsp->TOP__core.__PVT__memwb_mem_out = (
                                                    ((IData)(vlSymsp->TOP__core.__PVT__exmem_mem_read) 
                                                     & (~ (IData)(vlTOPp->rst)))
@@ -257,6 +244,87 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
                                                     (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
                                                      | vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__sext_mask))
                                                     : 0ULL);
+        vlSymsp->TOP__core.__PVT__exmem_alu_out = ((IData)(vlSymsp->TOP__core.__PVT__idex_is_j)
+                                                    ? 
+                                                   (4ULL 
+                                                    + vlSymsp->TOP__core.__PVT__idex_pc)
+                                                    : 
+                                                   ((0x10U 
+                                                     & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                     ? 0ULL
+                                                     : 
+                                                    ((8U 
+                                                      & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                      ? 
+                                                     ((4U 
+                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                       ? 
+                                                      ((2U 
+                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                        ? 0ULL
+                                                        : vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_out)
+                                                       : 
+                                                      ((2U 
+                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                        ? vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_out
+                                                        : 
+                                                       ((1U 
+                                                         & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                         ? (QData)((IData)(
+                                                                           (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                                            < vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
+                                                         : (QData)((IData)(
+                                                                           VL_LTS_IQQ(1,64,64, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))))))
+                                                      : 
+                                                     ((4U 
+                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                       ? 
+                                                      ((2U 
+                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                        ? 
+                                                       ((1U 
+                                                         & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                         ? 
+                                                        VL_SHIFTRS_QQI(64,64,6, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1, 
+                                                                       (0x3fU 
+                                                                        & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
+                                                         : 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         >> 
+                                                         (0x3fU 
+                                                          & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))))
+                                                        : 
+                                                       ((1U 
+                                                         & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                         ? 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         << 
+                                                         (0x3fU 
+                                                          & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
+                                                         : 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         | vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
+                                                       : 
+                                                      ((2U 
+                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                        ? 
+                                                       ((1U 
+                                                         & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                         ? 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         & vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)
+                                                         : 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         ^ vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))
+                                                        : 
+                                                       ((1U 
+                                                         & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
+                                                         ? 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         - vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)
+                                                         : 
+                                                        (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+                                                         + vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))))));
     }
     vlSymsp->TOP__core.__PVT__exmem_reg_write = ((~ (IData)(vlTOPp->rst)) 
                                                  & (IData)(vlSymsp->TOP__core.__PVT__idex_reg_write));
@@ -264,85 +332,6 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
                                            ? 0U : (IData)(vlSymsp->TOP__core.__PVT__idex_rd));
     vlSymsp->TOP__core.__PVT__exmem_mem_to_reg = ((~ (IData)(vlTOPp->rst)) 
                                                   & (IData)(vlSymsp->TOP__core.__PVT__idex_mem_to_reg));
-    vlSymsp->TOP__core.__PVT__exmem_alu_out = ((IData)(vlTOPp->rst)
-                                                ? 0ULL
-                                                : (
-                                                   (0x10U 
-                                                    & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                    ? 0ULL
-                                                    : 
-                                                   ((8U 
-                                                     & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                     ? 
-                                                    ((4U 
-                                                      & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                      ? 
-                                                     ((2U 
-                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                       ? 0ULL
-                                                       : vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_out)
-                                                      : 
-                                                     ((2U 
-                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                       ? vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_out
-                                                       : 
-                                                      ((1U 
-                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                        ? (QData)((IData)(
-                                                                          (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                                           < vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
-                                                        : (QData)((IData)(
-                                                                          VL_LTS_IQQ(1,64,64, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))))))
-                                                     : 
-                                                    ((4U 
-                                                      & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                      ? 
-                                                     ((2U 
-                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                       ? 
-                                                      ((1U 
-                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                        ? 
-                                                       VL_SHIFTRS_QQI(64,64,6, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1, 
-                                                                      (0x3fU 
-                                                                       & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
-                                                        : 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        >> 
-                                                        (0x3fU 
-                                                         & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))))
-                                                       : 
-                                                      ((1U 
-                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                        ? 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        << 
-                                                        (0x3fU 
-                                                         & (IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
-                                                        : 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        | vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))
-                                                      : 
-                                                     ((2U 
-                                                       & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                       ? 
-                                                      ((1U 
-                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                        ? 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        & vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)
-                                                        : 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        ^ vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2))
-                                                       : 
-                                                      ((1U 
-                                                        & (IData)(vlSymsp->TOP__core.__PVT__idex_alu_sel))
-                                                        ? 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        - vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)
-                                                        : 
-                                                       (vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-                                                        + vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2)))))));
     vlSymsp->TOP__core.__PVT__exmem_mem_read = ((~ (IData)(vlTOPp->rst)) 
                                                 & (IData)(vlSymsp->TOP__core.__PVT__idex_mem_read));
     vlSymsp->TOP__core.__PVT__exmem_funct3 = ((IData)(vlTOPp->rst)
@@ -351,11 +340,13 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
     vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2 
         = ((IData)(vlSymsp->TOP__core.__PVT__idex_alu_src)
             ? vlSymsp->TOP__core.__PVT__idex_imm : vlSymsp->TOP__core.__PVT__idex_in2);
-    vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
-        = ((IData)(vlSymsp->TOP__core.__PVT__idex_is_lui)
-            ? 0ULL : ((IData)(vlSymsp->TOP__core.__PVT__idex_is_auipc)
-                       ? vlSymsp->TOP__core.__PVT__idex_pc
-                       : vlSymsp->TOP__core.__PVT__idex_in1));
+    vlSymsp->TOP__core.__PVT__idex_alu_sel = ((IData)(vlTOPp->rst)
+                                               ? 0U
+                                               : (IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__alu_sel));
+    vlSymsp->TOP__core.__PVT__idex_is_j = ((~ (IData)(vlTOPp->rst)) 
+                                           & (IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__is_j));
+    vlSymsp->TOP__core.__PVT__idex_pc = ((IData)(vlTOPp->rst)
+                                          ? 0ULL : vlSymsp->TOP__core.__PVT__ifid_pc);
     vlSymsp->TOP__core.__PVT__idex_reg_write = ((~ (IData)(vlTOPp->rst)) 
                                                 & (((((((0x33U 
                                                          == 
@@ -394,9 +385,6 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
                                                     == 
                                                     (0x7fU 
                                                      & vlSymsp->TOP__core.__PVT__ifid_instr)));
-    vlSymsp->TOP__core.__PVT__idex_alu_sel = ((IData)(vlTOPp->rst)
-                                               ? 0U
-                                               : (IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__alu_sel));
     vlSymsp->TOP__core.__PVT__idex_mem_read = ((~ (IData)(vlTOPp->rst)) 
                                                & (3U 
                                                   == 
@@ -475,6 +463,67 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
                                                + (IData)(vlSymsp->TOP__core.__PVT__exmem_alu_out)))])) 
                   << 0x38U));
     }
+    vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1 
+        = ((IData)(vlSymsp->TOP__core.__PVT__idex_is_lui)
+            ? 0ULL : ((IData)(vlSymsp->TOP__core.__PVT__idex_is_auipc)
+                       ? vlSymsp->TOP__core.__PVT__idex_pc
+                       : vlSymsp->TOP__core.__PVT__idex_in1));
+    vlSymsp->TOP__core.__PVT__ifid_pc = ((IData)(vlTOPp->rst)
+                                          ? 0ULL : 
+                                         ((IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__is_j)
+                                           ? 0ULL : vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr));
+    vlSymsp->TOP__core.__Vtableidx1 = ((0x10U & (((8U 
+                                                   & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
+                                                   ? 
+                                                  ((~ 
+                                                    ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
+                                                     >> 2U)) 
+                                                   & ((~ 
+                                                       ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
+                                                        >> 1U)) 
+                                                      & ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
+                                                         & (IData)(
+                                                                   (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+                                                                    >> 0x3fU)))))
+                                                   : 
+                                                  ((4U 
+                                                    & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
+                                                    ? 
+                                                   ((~ 
+                                                     ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
+                                                      >> 1U)) 
+                                                    & ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
+                                                       & (IData)(
+                                                                 (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+                                                                  >> 0x1fU))))
+                                                    : 
+                                                   ((2U 
+                                                     & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
+                                                     ? 
+                                                    ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
+                                                     & (IData)(
+                                                               (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+                                                                >> 0xfU)))
+                                                     : 
+                                                    ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
+                                                     & (IData)(
+                                                               (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
+                                                                >> 7U)))))) 
+                                                 << 4U)) 
+                                       | (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes));
+    vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__sext_mask 
+        = vlSymsp->TOP__core.__Vtable1___PVT__mem_stage_inst__DOT__sext_mask
+        [vlSymsp->TOP__core.__Vtableidx1];
+    vlSymsp->TOP__core.__PVT__ifid_instr = ((IData)(vlTOPp->rst)
+                                             ? 0x13U
+                                             : ((IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__is_j)
+                                                 ? 0x13U
+                                                 : 
+                                                vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__mem
+                                                [(0x7fffU 
+                                                  & (IData)(
+                                                            (vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr 
+                                                             >> 2U)))]));
     VL_EXTEND_WQ(128,64, __Vtemp3, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in1);
     VL_EXTEND_WQ(128,64, __Vtemp4, vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_in2);
     VL_MUL_W(4, __Vtemp5, __Vtemp3, __Vtemp4);
@@ -546,58 +595,22 @@ VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__3(Vcore__Syms* __restrict vl
                 << 0x20U) | (QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[0U])))
             : (((QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[3U])) 
                 << 0x20U) | (QData)((IData)(vlSymsp->TOP__core.__PVT__ex_stage_inst__DOT__alu_alu__DOT__mul_alu__DOT__product_full[2U]))));
-    vlSymsp->TOP__core.__Vtableidx1 = ((0x10U & (((8U 
-                                                   & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
-                                                   ? 
-                                                  ((~ 
-                                                    ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
-                                                     >> 2U)) 
-                                                   & ((~ 
-                                                       ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
-                                                        >> 1U)) 
-                                                      & ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
-                                                         & (IData)(
-                                                                   (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-                                                                    >> 0x3fU)))))
-                                                   : 
-                                                  ((4U 
-                                                    & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
-                                                    ? 
-                                                   ((~ 
-                                                     ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
-                                                      >> 1U)) 
-                                                    & ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
-                                                       & (IData)(
-                                                                 (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-                                                                  >> 0x1fU))))
-                                                    : 
-                                                   ((2U 
-                                                     & (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes))
-                                                     ? 
-                                                    ((~ (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes)) 
-                                                     & (IData)(
-                                                               (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-                                                                >> 0xfU)))
-                                                     : 
-                                                    ((IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes) 
-                                                     & (IData)(
-                                                               (vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__raw_read 
-                                                                >> 7U)))))) 
-                                                 << 4U)) 
-                                       | (IData)(vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__access_bytes));
-    vlSymsp->TOP__core.__PVT__mem_stage_inst__DOT__sext_mask 
-        = vlSymsp->TOP__core.__Vtable1___PVT__mem_stage_inst__DOT__sext_mask
-        [vlSymsp->TOP__core.__Vtableidx1];
-    if (vlTOPp->rst) {
-        vlSymsp->TOP__core.__PVT__ifid_instr = 0U;
-        vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr = 0ULL;
-    } else {
-        vlSymsp->TOP__core.__PVT__ifid_instr = vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__mem
-            [(0x7fffU & (IData)((vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr 
-                                 >> 2U)))];
-        vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr 
-            = vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_next;
-    }
+    vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr 
+        = ((IData)(vlTOPp->rst) ? 0ULL : vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_next);
+}
+
+VL_INLINE_OPT void Vcore_core::_sequent__TOP__core__4(Vcore__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+      Vcore_core::_sequent__TOP__core__4\n"); );
+    Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
     vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_next 
-        = (4ULL + vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr);
+        = ((IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__is_j)
+            ? (((0x6fU == (0x7fU & vlSymsp->TOP__core.__PVT__ifid_instr)) 
+                | (IData)(vlSymsp->TOP__core__id_stage_inst.__PVT__misprediction))
+                ? (vlSymsp->TOP__core.__PVT__ifid_pc 
+                   + vlSymsp->TOP__core__id_stage_inst.__PVT__imm)
+                : ((0x67U == (0x7fU & vlSymsp->TOP__core.__PVT__ifid_instr))
+                    ? (vlSymsp->TOP__core__id_stage_inst__regfile_inst.__PVT__read_data_1 
+                       + vlSymsp->TOP__core__id_stage_inst.__PVT__imm)
+                    : 0ULL)) : (4ULL + vlSymsp->TOP__core.__PVT__if_stage_inst__DOT__pc_curr));
 }
