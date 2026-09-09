@@ -9,6 +9,7 @@ module ex_stage #(
 
 	input wire [BUS_WIDTH-1:0] imm,
 	input wire [ALU_SEL-1:0] alu_sel,
+	input wire is_j,
 	input wire is_lui,
 	input wire is_auipc,
 	input wire [BUS_WIDTH-1:0] pc,
@@ -31,6 +32,6 @@ module ex_stage #(
 		.alu_sel(alu_sel)
 	);
 
-	assign out = alu_op;
+	assign out = (is_j) ? (pc+4) : (alu_op);
 endmodule
 

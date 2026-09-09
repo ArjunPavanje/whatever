@@ -34,9 +34,9 @@ module core #(
         wire [BUS_WIDTH-1:0]   if_pc;
         wire [INSTR_WIDTH-1:0] if_instr;
 
-        // pc_jmp/pc_dst stubbed to 0 until ex_stage branch/jump support exists
-        wire                   pc_jmp = 1'b0;
-        wire [BUS_WIDTH-1:0]   pc_dst = {BUS_WIDTH{1'b0}};
+        // Wires routed back from ID stage for early branch resolution
+        wire                   id_is_j;
+        wire [BUS_WIDTH-1:0]   id_pc_dst;
 
         if_stage #(
                 .BUS_WIDTH    (BUS_WIDTH),
@@ -46,8 +46,8 @@ module core #(
                 .clk    (clk),
                 .rst    (rst),
                 .stall  (stall),
-                .pc_jmp (pc_jmp),
-                .pc_dst (pc_dst),
+                .pc_jmp (id_is_j),     // Routed from ID
+                .pc_dst (id_pc_dst),   // Routed from ID
                 .pc     (if_pc),
                 .instr  (if_instr)
         );
@@ -65,6 +65,8 @@ module core #(
                 .clk      (clk),
                 .rst      (rst),
                 .stall    (stall),
+		.flush(id_is_j),
+
                 .in_pc    (if_pc),
                 .in_instr (if_instr),
                 .out_pc   (ifid_pc),
@@ -99,12 +101,13 @@ module core #(
                 .wb_en      (wb_en),
                 .wb_addr    (wb_addr),
                 .wb_data    (wb_data),
+                .pc         (ifid_pc),       // Passes pipelined PC to ID
 
                 .in1        (id_in1),
                 .in2        (id_in2),
                 .imm        (id_imm),
                 .alu_sel    (id_alu_sel),
-                .alu_src    (id_alu_src),
+                .alu_src   (id_alu_src),
                 .rd_addr    (id_rd_addr),
 
                 .reg_write  (id_reg_write),
@@ -113,6 +116,8 @@ module core #(
                 .mem_to_reg (id_mem_to_reg),
                 .funct3     (id_funct3),
 
+                .pc_dst     (id_pc_dst),     // Fixed typo and outputs target
+                .is_j       (id_is_j),
                 .is_lui     (id_is_lui),
                 .is_auipc   (id_is_auipc)
         );
@@ -122,7 +127,7 @@ module core #(
         // ================================================================
         wire [INSTR_WIDTH-1:0] idex_instr;
         wire [BUS_WIDTH-1:0]   idex_pc, idex_imm, idex_in1, idex_in2, idex_write_data;
-        wire                   idex_alu_src, idex_is_lui, idex_is_auipc;
+        wire                   idex_alu_src, idex_is_j, idex_is_lui, idex_is_auipc;
         wire [ALU_SEL-1:0]     idex_alu_sel;
         wire                   idex_mem_write, idex_mem_read, idex_reg_write, idex_mem_to_reg;
         wire [REGFILE_LEN-1:0] idex_rd;
@@ -145,6 +150,7 @@ module core #(
                 .in_in2        (id_in2),
                 .in_alu_src    (id_alu_src),
                 .in_alu_sel    (id_alu_sel),
+		.in_is_j(id_is_j),
                 .in_is_lui     (id_is_lui),
                 .in_is_auipc   (id_is_auipc),
                 .in_funct3     (id_funct3),
@@ -164,6 +170,7 @@ module core #(
                 .out_in2       (idex_in2),
                 .out_alu_src   (idex_alu_src),
                 .out_alu_sel   (idex_alu_sel),
+		.out_is_j (idex_is_j),
                 .out_is_lui    (idex_is_lui),
                 .out_is_auipc  (idex_is_auipc),
                 .out_funct3    (idex_funct3),
@@ -191,6 +198,7 @@ module core #(
                 .imm      (idex_imm),
                 .alu_sel  (idex_alu_sel),
                 .alu_src  (idex_alu_src),
+		.is_j (idex_is_j),
                 .is_lui   (idex_is_lui),
                 .is_auipc (idex_is_auipc),
                 .pc       (idex_pc),
@@ -299,4 +307,4 @@ module core #(
         assign wb_en   = memwb_reg_write;
         assign wb_addr = memwb_rd;
 
-endmodule
+endmodule 

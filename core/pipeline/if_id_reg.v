@@ -8,6 +8,7 @@ module if_id_reg#(
 )(
 	input wire clk,
 	input wire rst,
+	input wire flush,
 	input wire stall,
 
 	// From IF stage
@@ -18,11 +19,16 @@ module if_id_reg#(
 	output reg [BUS_WIDTH-1:0] out_pc,
 	output reg [INSTR_WIDTH-1:0] out_instr
 );
+	localparam NOP = 32'h00000013;
 	always @(posedge clk) begin
                 if(rst) begin
                         out_pc    <= {BUS_WIDTH{1'b0}};
-                        out_instr <= {INSTR_WIDTH{1'b0}};
+                        out_instr <= NOP;
                 end
+		else if (flush) begin
+			out_pc    <= {BUS_WIDTH{1'b0}};
+            		out_instr <= NOP;
+		end
                 else if(!stall) begin
                         out_pc    <= in_pc;
                         out_instr <= in_instr;

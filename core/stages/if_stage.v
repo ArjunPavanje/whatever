@@ -6,7 +6,7 @@ module if_stage#(
 	input wire clk,
 	input wire stall,
 	input wire rst,
-	input wire pc_jmp,
+	input wire pc_jmp, 
 	input wire [BUS_WIDTH-1:0] pc_dst,
 
 	output wire [INSTR_WIDTH-1:0] instr,

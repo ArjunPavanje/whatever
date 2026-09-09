@@ -8,9 +8,10 @@ module id_stage #(
     	input  wire [INSTR_WIDTH-1:0] instr,
 
     	// Writeback Interface from WB Stage
-    	input  wire wb_en,
-    	input  wire [4:0] wb_addr,
-    	input  wire [BUS_WIDTH-1:0] wb_data,
+    	input wire wb_en,
+    	input wire [4:0] wb_addr,
+    	input wire [BUS_WIDTH-1:0] wb_data,
+	input wire [BUS_WIDTH-1:0] pc,
 
     	// Outputs to EX Stage
     	output wire [BUS_WIDTH-1:0] in1,
@@ -25,7 +26,9 @@ module id_stage #(
 	output wire mem_write,
 	output wire mem_to_reg,
 	output wire [2:0] funct3,
-
+	
+	output wire [BUS_WIDTH-1:0] pc_dst,
+	output wire is_j,
 	output wire is_lui,
 	output wire is_auipc
 );
@@ -49,9 +52,29 @@ module id_stage #(
 	assign mem_write  = (opcode == 7'b0100011);  // Store
 	assign mem_to_reg = (opcode == 7'b0000011);  // Load only
 
+	wire branch_taken, is_branch, misprediction;
+	// Branch unit
+	branch_unit #(
+		.BUS_WIDTH(BUS_WIDTH)
+	) branch_unit_inst (
+		.opcode(opcode),
+		.funct3(funct3),
+		.in1(in1),
+		.in2(in2),
+		.branch_taken(branch_taken),
+		.is_branch(is_branch)
+	);
+	assign misprediction = (is_branch & branch_taken);
+
         assign is_lui = (opcode == 7'b0110111);   
         assign is_auipc = (opcode == 7'b0010111);
+	wire is_jal = (opcode == 7'b1101111);
+	wire is_jalr = (opcode == 7'b1100111);
+	
+	assign pc_dst = (is_jal | misprediction) ? (pc + imm) : ((is_jalr) ? (in1+imm) : ( ({BUS_WIDTH{1'b0}})   ));
+	assign is_j = is_jal | is_jalr | misprediction;
 
+	
 	// Register File Instance
     	regfile #(
     	    .BUS_WIDTH(BUS_WIDTH),

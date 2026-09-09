@@ -5,6 +5,7 @@
 * in1 = rs1 value read from regfile
 * in2 = rs2 value read from regfile
 * is_lui, is_auipc = indicates if instruction is LUI or AUIPC respectively
+* is_j = indicates if instruction is JAL or JALR
 *
 * alu_src = 1 selects imm as ALU in2, 0 selects rs2
 * alu_sel = ALU operation select from control unit
@@ -36,6 +37,7 @@ module id_ex_reg#(
 	input wire [BUS_WIDTH-1:0] in_in2,
 	input wire in_alu_src,
 	input wire [ALU_SEL-1:0] in_alu_sel,
+	input wire in_is_j,
 	input wire in_is_lui,
 	input wire in_is_auipc,
 
@@ -56,6 +58,7 @@ module id_ex_reg#(
 	output reg [BUS_WIDTH-1:0] out_in2,
 	output reg out_alu_src,
 	output reg [ALU_SEL-1:0] out_alu_sel,
+	output reg out_is_j,
 	output reg out_is_lui,
 	output reg out_is_auipc,
 
@@ -77,6 +80,7 @@ module id_ex_reg#(
                         out_in2 <= {BUS_WIDTH{1'b0}};
                         out_alu_src <= 1'b0;
                         out_alu_sel <= {ALU_SEL{1'b0}};
+			out_is_j <= 1'b0;
 			out_is_lui <= 1'b0;
 			out_is_auipc <= 1'b0;
 
@@ -97,6 +101,7 @@ module id_ex_reg#(
                         out_in2 <= in_in2;
                         out_alu_src <= in_alu_src;
                         out_alu_sel <= in_alu_sel;
+			out_is_j <= in_is_j;
 			out_is_lui <= in_is_lui;
 			out_is_auipc <= in_is_auipc;
 
@@ -110,6 +115,4 @@ module id_ex_reg#(
                         out_mem_to_reg <= in_mem_to_reg;
                 end
         end
-
-
 endmodule
