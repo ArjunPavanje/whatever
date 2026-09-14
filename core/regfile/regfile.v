@@ -28,6 +28,8 @@ module regfile #(
 		reg_file[0] <= ZERO;
 	end
 
-	assign read_data_1 = (read_addr_1 == 0) ? (ZERO) : (reg_file[read_addr_1]);
-	assign read_data_2 = (read_addr_2 == 0) ? (ZERO) : (reg_file[read_addr_2]);
+	assign read_data_1 = (read_addr_1 == 0) ? (ZERO) :
+	                     ((write_en && (read_addr_1 == write_addr)) ? write_data : reg_file[read_addr_1]);
+	assign read_data_2 = (read_addr_2 == 0) ? (ZERO) :
+	                     ((write_en && (read_addr_2 == write_addr)) ? write_data : reg_file[read_addr_2]);
 endmodule

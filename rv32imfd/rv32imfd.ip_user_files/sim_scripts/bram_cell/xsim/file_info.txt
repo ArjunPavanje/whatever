@@ -1,0 +1,2 @@
+bram_cell.v,verilog,xil_defaultlib,../../../ip/bram_cell/sim/bram_cell.v,incdir="../../../../../../../../Xilinx/2025.2/data/rsb/busdef"
+glbl.v,Verilog,xil_defaultlib,glbl.v

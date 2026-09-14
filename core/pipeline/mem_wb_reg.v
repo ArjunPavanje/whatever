@@ -13,6 +13,7 @@ module mem_wb_reg#(
 	input wire clk,
 	input wire rst,
 	input wire stall,
+	input wire flush,
 
 	// From MEM Stage
 	input wire [BUS_WIDTH-1:0] in_mem_out, 
@@ -29,14 +30,14 @@ module mem_wb_reg#(
 	output reg [REGFILE_LEN-1:0] out_rd 
 );
 	always @(posedge clk) begin
-		if(rst) begin
+		if(rst || flush) begin
 			out_mem_out <= {BUS_WIDTH{1'b0}};
 			out_alu_out <= {BUS_WIDTH{1'b0}};
 			out_reg_write <= 1'b0;
 			out_mem_to_reg <= 1'b0;
 			out_rd <= {REGFILE_LEN{1'b0}};
 		end
-		else begin
+		else if(!stall) begin
 			out_mem_out <= in_mem_out;
 			out_alu_out <= in_alu_out;
 			out_reg_write <= in_reg_write;

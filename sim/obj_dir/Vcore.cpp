@@ -33,7 +33,7 @@ void Vcore::eval_step() {
             Verilated::debug(1);
             __Vchange = _change_request(vlSymsp);
             Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("/home/llamaglama/Documents/Github/whatever/core/core.v", 16, "",
+            VL_FATAL_MT("/home/llamaglama/Documents/Github/whatever/core/core.v", 7, "",
                 "Verilated model didn't converge\n"
                 "- See DIDNOTCONVERGE in the Verilator manual");
         } else {
@@ -59,7 +59,7 @@ void Vcore::_eval_initial_loop(Vcore__Syms* __restrict vlSymsp) {
             Verilated::debug(1);
             __Vchange = _change_request(vlSymsp);
             Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("/home/llamaglama/Documents/Github/whatever/core/core.v", 16, "",
+            VL_FATAL_MT("/home/llamaglama/Documents/Github/whatever/core/core.v", 7, "",
                 "Verilated model didn't DC converge\n"
                 "- See DIDNOTCONVERGE in the Verilator manual");
         } else {
@@ -73,15 +73,16 @@ void Vcore::_eval(Vcore__Syms* __restrict vlSymsp) {
     Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     if (((IData)(vlTOPp->clk) & (~ (IData)(vlTOPp->__Vclklast__TOP__clk)))) {
-        vlSymsp->TOP__core._sequent__TOP__core__2(vlSymsp);
+        vlSymsp->TOP__core._sequent__TOP__core__1(vlSymsp);
         vlTOPp->__Vm_traceActivity[1U] = 1U;
         vlSymsp->TOP__core__id_stage_inst__regfile_inst._sequent__TOP__core__id_stage_inst__regfile_inst__1(vlSymsp);
-        vlSymsp->TOP__core._sequent__TOP__core__3(vlSymsp);
+        vlSymsp->TOP__core._sequent__TOP__core__2(vlSymsp);
         vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__1(vlSymsp);
-        vlSymsp->TOP__core__id_stage_inst__regfile_inst._sequent__TOP__core__id_stage_inst__regfile_inst__2(vlSymsp);
-        vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__2(vlSymsp);
-        vlSymsp->TOP__core._sequent__TOP__core__4(vlSymsp);
     }
+    vlSymsp->TOP__core._combo__TOP__core__6(vlSymsp);
+    vlTOPp->__Vm_traceActivity[2U] = 1U;
+    vlSymsp->TOP__core__id_stage_inst._combo__TOP__core__id_stage_inst__3(vlSymsp);
+    vlSymsp->TOP__core._settle__TOP__core__5(vlSymsp);
     // Final
     vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;
 }

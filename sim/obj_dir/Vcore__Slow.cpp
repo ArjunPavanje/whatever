@@ -35,10 +35,11 @@ void Vcore::_eval_initial(Vcore__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore::_eval_initial\n"); );
     Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlSymsp->TOP__core._initial__TOP__core__1(vlSymsp);
+    vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;
+    vlSymsp->TOP__core._initial__TOP__core__3(vlSymsp);
+    vlTOPp->__Vm_traceActivity[2U] = 1U;
     vlTOPp->__Vm_traceActivity[1U] = 1U;
     vlTOPp->__Vm_traceActivity[0U] = 1U;
-    vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;
 }
 
 void Vcore::final() {
@@ -52,13 +53,12 @@ void Vcore::_eval_settle(Vcore__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore::_eval_settle\n"); );
     Vcore* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlSymsp->TOP__core._settle__TOP__core__5(vlSymsp);
+    vlSymsp->TOP__core._settle__TOP__core__4(vlSymsp);
+    vlTOPp->__Vm_traceActivity[2U] = 1U;
     vlTOPp->__Vm_traceActivity[1U] = 1U;
     vlTOPp->__Vm_traceActivity[0U] = 1U;
-    vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__1(vlSymsp);
-    vlSymsp->TOP__core__id_stage_inst__regfile_inst._sequent__TOP__core__id_stage_inst__regfile_inst__2(vlSymsp);
-    vlSymsp->TOP__core__id_stage_inst._sequent__TOP__core__id_stage_inst__2(vlSymsp);
-    vlSymsp->TOP__core._sequent__TOP__core__4(vlSymsp);
+    vlSymsp->TOP__core__id_stage_inst._settle__TOP__core__id_stage_inst__2(vlSymsp);
+    vlSymsp->TOP__core._settle__TOP__core__5(vlSymsp);
 }
 
 void Vcore::_ctor_var_reset() {
@@ -66,7 +66,7 @@ void Vcore::_ctor_var_reset() {
     // Body
     clk = VL_RAND_RESET_I(1);
     rst = VL_RAND_RESET_I(1);
-    { int __Vi0=0; for (; __Vi0<2; ++__Vi0) {
+    { int __Vi0=0; for (; __Vi0<3; ++__Vi0) {
             __Vm_traceActivity[__Vi0] = VL_RAND_RESET_I(1);
     }}
 }

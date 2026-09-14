@@ -1,16 +1,7 @@
 /*
-* core.v — top-level unpipelined-datapath-with-pipeline-registers RV32/64 core
+* core.v — top-level 5-stage pipelined RV32/64 core with Forwarding Unit & Hazard Detection Unit
 *
 * Stage order: IF -> IF/ID -> ID -> ID/EX -> EX -> EX/MEM -> MEM -> MEM/WB -> WB
-* WB writes back into the regfile inside ID stage (regfile physically lives
-* in id_stage.v), so wb_data/wb_addr/wb_en loop back from wb_stage into id_stage.
-*
-* NOTE: no forwarding, no stall/hazard logic, no branch/jump support wired
-* yet (ex_stage currently only produces LUI/AUIPC-correct ALU output).
-* stall/rst ports on all pipeline registers are tied off (stall=0) since
-* the hazard unit doesn't exist yet — back-to-back dependent instructions
-* and loads-then-use will silently compute wrong results until forwarding
-* is added. Fine for first bring-up with independent instructions.
 */
 
 module core #(
@@ -25,18 +16,39 @@ module core #(
         input wire rst
 );
 
-        // Hazard/stall stub — tie off until hazard_unit exists
-        wire stall = 1'b0;
+        // ================================================================
+        // Hazard Detection Unit & Stall Signals
+        // ================================================================
+        wire                   load_use_stall;
+        wire                   mem_stall;
+        wire                   pipeline_stall;
+        wire [REGFILE_LEN-1:0] id_rs1_addr, id_rs2_addr, idex_rd;
+        wire                   id_use_rs1, id_use_rs2, idex_mem_read;
+
+        hazard_detecting_unit #(
+                .REGFILE_LEN(REGFILE_LEN)
+        ) hazard_detecting_unit_inst (
+                .id_rs1       (id_rs1_addr),
+                .id_rs2       (id_rs2_addr),
+                .id_use_rs1   (id_use_rs1),
+                .id_use_rs2   (id_use_rs2),
+                .idex_rd      (idex_rd),
+                .idex_mem_read(idex_mem_read),
+                .stall        (load_use_stall)
+        );
+
+        assign pipeline_stall = load_use_stall | mem_stall;
+
+        // Branch resolution control
+        wire                 id_is_j;
+        wire [BUS_WIDTH-1:0] id_pc_dst;
+        wire                 real_is_j = id_is_j & !pipeline_stall;
 
         // ================================================================
         // IF stage
         // ================================================================
         wire [BUS_WIDTH-1:0]   if_pc;
         wire [INSTR_WIDTH-1:0] if_instr;
-
-        // Wires routed back from ID stage for early branch resolution
-        wire                   id_is_j;
-        wire [BUS_WIDTH-1:0]   id_pc_dst;
 
         if_stage #(
                 .BUS_WIDTH    (BUS_WIDTH),
@@ -45,8 +57,8 @@ module core #(
         ) if_stage_inst (
                 .clk    (clk),
                 .rst    (rst),
-                .stall  (stall),
-                .pc_jmp (id_is_j),     // Routed from ID
+                .stall  (pipeline_stall),
+                .pc_jmp (real_is_j),   // Routed from ID
                 .pc_dst (id_pc_dst),   // Routed from ID
                 .pc     (if_pc),
                 .instr  (if_instr)
@@ -64,8 +76,8 @@ module core #(
         ) if_id_reg_inst (
                 .clk      (clk),
                 .rst      (rst),
-                .stall    (stall),
-		.flush(id_is_j),
+                .stall    (pipeline_stall),
+                .flush    (real_is_j),
 
                 .in_pc    (if_pc),
                 .in_instr (if_instr),
@@ -84,42 +96,60 @@ module core #(
         wire                   id_is_lui, id_is_auipc;
         wire [2:0]             id_funct3;
 
-        // WB loop-back (declared here, driven at bottom by wb_stage/mem_wb_reg)
+        // Forwarding signals and outputs from subsequent stages
+        wire [BUS_WIDTH-1:0]   ex_out;
+        wire [REGFILE_LEN-1:0] exmem_rd, memwb_rd;
+        wire                   exmem_reg_write, exmem_mem_to_reg, idex_reg_write;
+        wire [BUS_WIDTH-1:0]   exmem_alu_out, mem_out, wb_data;
         wire                   wb_en;
         wire [REGFILE_LEN-1:0] wb_addr;
-        wire [BUS_WIDTH-1:0]   wb_data;
 
         id_stage #(
                 .BUS_WIDTH  (BUS_WIDTH),
                 .INSTR_WIDTH(INSTR_WIDTH),
                 .ALU_SEL    (ALU_SEL)
         ) id_stage_inst (
-                .clk        (clk),
-                .rst        (rst),
-                .instr      (ifid_instr),
+                .clk             (clk),
+                .rst             (rst),
+                .instr           (ifid_instr),
 
-                .wb_en      (wb_en),
-                .wb_addr    (wb_addr),
-                .wb_data    (wb_data),
-                .pc         (ifid_pc),       // Passes pipelined PC to ID
+                .wb_en           (wb_en),
+                .wb_addr         (wb_addr),
+                .wb_data         (wb_data),
+                .pc              (ifid_pc),
 
-                .in1        (id_in1),
-                .in2        (id_in2),
-                .imm        (id_imm),
-                .alu_sel    (id_alu_sel),
-                .alu_src   (id_alu_src),
-                .rd_addr    (id_rd_addr),
+                .idex_rd         (idex_rd),
+                .idex_reg_write  (idex_reg_write),
+                .idex_mem_read   (idex_mem_read),
+                .ex_out          (ex_out),
 
-                .reg_write  (id_reg_write),
-                .mem_read   (id_mem_read),
-                .mem_write  (id_mem_write),
-                .mem_to_reg (id_mem_to_reg),
-                .funct3     (id_funct3),
+                .exmem_rd        (exmem_rd),
+                .exmem_reg_write (exmem_reg_write),
+                .exmem_mem_to_reg(exmem_mem_to_reg),
+                .exmem_alu_out   (exmem_alu_out),
+                .mem_out         (mem_out),
 
-                .pc_dst     (id_pc_dst),     // Fixed typo and outputs target
-                .is_j       (id_is_j),
-                .is_lui     (id_is_lui),
-                .is_auipc   (id_is_auipc)
+                .in1             (id_in1),
+                .in2             (id_in2),
+                .imm             (id_imm),
+                .alu_sel         (id_alu_sel),
+                .alu_src         (id_alu_src),
+                .rd_addr         (id_rd_addr),
+                .rs1_addr        (id_rs1_addr),
+                .rs2_addr        (id_rs2_addr),
+                .use_rs1         (id_use_rs1),
+                .use_rs2         (id_use_rs2),
+
+                .reg_write       (id_reg_write),
+                .mem_read        (id_mem_read),
+                .mem_write       (id_mem_write),
+                .mem_to_reg      (id_mem_to_reg),
+                .funct3          (id_funct3),
+
+                .pc_dst          (id_pc_dst),
+                .is_j            (id_is_j),
+                .is_lui          (id_is_lui),
+                .is_auipc        (id_is_auipc)
         );
 
         // ================================================================
@@ -129,8 +159,8 @@ module core #(
         wire [BUS_WIDTH-1:0]   idex_pc, idex_imm, idex_in1, idex_in2, idex_write_data;
         wire                   idex_alu_src, idex_is_j, idex_is_lui, idex_is_auipc;
         wire [ALU_SEL-1:0]     idex_alu_sel;
-        wire                   idex_mem_write, idex_mem_read, idex_reg_write, idex_mem_to_reg;
-        wire [REGFILE_LEN-1:0] idex_rd;
+        wire                   idex_mem_write, idex_mem_to_reg;
+        wire [REGFILE_LEN-1:0] idex_rs1, idex_rs2;
         wire [2:0]             idex_funct3;
 
         id_ex_reg #(
@@ -141,7 +171,8 @@ module core #(
         ) id_ex_reg_inst (
                 .clk           (clk),
                 .rst           (rst),
-                .stall         (stall),
+                .stall         (mem_stall),
+                .flush         (load_use_stall & !mem_stall),
 
                 .in_instr      (ifid_instr),
                 .in_pc         (ifid_pc),
@@ -150,7 +181,7 @@ module core #(
                 .in_in2        (id_in2),
                 .in_alu_src    (id_alu_src),
                 .in_alu_sel    (id_alu_sel),
-		.in_is_j(id_is_j),
+                .in_is_j       (id_is_j),
                 .in_is_lui     (id_is_lui),
                 .in_is_auipc   (id_is_auipc),
                 .in_funct3     (id_funct3),
@@ -160,6 +191,8 @@ module core #(
                 .in_write_data (id_in2),
 
                 .in_rd         (id_rd_addr),
+                .in_rs1        (id_rs1_addr),
+                .in_rs2        (id_rs2_addr),
                 .in_reg_write  (id_reg_write),
                 .in_mem_to_reg (id_mem_to_reg),
 
@@ -170,7 +203,7 @@ module core #(
                 .out_in2       (idex_in2),
                 .out_alu_src   (idex_alu_src),
                 .out_alu_sel   (idex_alu_sel),
-		.out_is_j (idex_is_j),
+                .out_is_j      (idex_is_j),
                 .out_is_lui    (idex_is_lui),
                 .out_is_auipc  (idex_is_auipc),
                 .out_funct3    (idex_funct3),
@@ -180,6 +213,8 @@ module core #(
                 .out_write_data(idex_write_data),
 
                 .out_rd        (idex_rd),
+                .out_rs1       (idex_rs1),
+                .out_rs2       (idex_rs2),
                 .out_reg_write (idex_reg_write),
                 .out_mem_to_reg(idex_mem_to_reg)
         );
@@ -187,22 +222,33 @@ module core #(
         // ================================================================
         // EX stage
         // ================================================================
-        wire [BUS_WIDTH-1:0] ex_out;
+        wire [BUS_WIDTH-1:0] ex_write_data;
+        wire                 memwb_reg_write;
 
         ex_stage #(
-                .BUS_WIDTH(BUS_WIDTH),
-                .ALU_SEL  (ALU_SEL)
+                .BUS_WIDTH  (BUS_WIDTH),
+                .ALU_SEL    (ALU_SEL),
+                .REGFILE_LEN(REGFILE_LEN)
         ) ex_stage_inst (
-                .in1      (idex_in1),
-                .in2      (idex_in2),
-                .imm      (idex_imm),
-                .alu_sel  (idex_alu_sel),
-                .alu_src  (idex_alu_src),
-		.is_j (idex_is_j),
-                .is_lui   (idex_is_lui),
-                .is_auipc (idex_is_auipc),
-                .pc       (idex_pc),
-                .out      (ex_out)
+                .in1            (idex_in1),
+                .in2            (idex_in2),
+                .imm            (idex_imm),
+                .alu_sel        (idex_alu_sel),
+                .alu_src        (idex_alu_src),
+                .idex_rs1       (idex_rs1),
+                .idex_rs2       (idex_rs2),
+                .exmem_rd       (exmem_rd),
+                .memwb_rd       (memwb_rd),
+                .exmem_reg_write(exmem_reg_write),
+                .memwb_reg_write(memwb_reg_write),
+                .exmem_op       (exmem_alu_out),
+                .memwb_op       (wb_data),
+                .is_j           (idex_is_j),
+                .is_lui         (idex_is_lui),
+                .is_auipc       (idex_is_auipc),
+                .pc             (idex_pc),
+                .out            (ex_out),
+                .write_data     (ex_write_data)
         );
 
         // ================================================================
@@ -210,9 +256,7 @@ module core #(
         // ================================================================
         wire [2:0]             exmem_funct3;
         wire                   exmem_mem_write, exmem_mem_read;
-        wire [BUS_WIDTH-1:0]   exmem_write_data, exmem_alu_out;
-        wire [REGFILE_LEN-1:0] exmem_rd;
-        wire                   exmem_reg_write, exmem_mem_to_reg;
+        wire [BUS_WIDTH-1:0]   exmem_write_data;
 
         ex_mem_reg #(
                 .BUS_WIDTH  (BUS_WIDTH),
@@ -220,12 +264,13 @@ module core #(
         ) ex_mem_reg_inst (
                 .clk           (clk),
                 .rst           (rst),
-                .stall         (stall),
+                .stall         (mem_stall),
+                .flush         (1'b0),
 
                 .in_funct3     (idex_funct3),
                 .in_mem_write  (idex_mem_write),
                 .in_mem_read   (idex_mem_read),
-                .in_write_data (idex_write_data),
+                .in_write_data (ex_write_data),
 
                 .in_alu_out    (ex_out),
                 .in_rd         (idex_rd),
@@ -246,7 +291,7 @@ module core #(
         // ================================================================
         // MEM stage
         // ================================================================
-        wire [BUS_WIDTH-1:0] mem_out, mem_alu_out;
+        wire [BUS_WIDTH-1:0] mem_alu_out;
 
         mem_stage #(
                 .BUS_WIDTH   (BUS_WIDTH),
@@ -261,15 +306,15 @@ module core #(
                 .write_data(exmem_write_data),
                 .addr      (exmem_alu_out),
                 .mem_out   (mem_out),
-                .alu_out   (mem_alu_out)
+                .alu_out   (mem_alu_out),
+                .mem_stall (mem_stall)
         );
 
         // ================================================================
         // MEM/WB pipeline register
         // ================================================================
         wire [BUS_WIDTH-1:0]   memwb_mem_out, memwb_alu_out;
-        wire [REGFILE_LEN-1:0] memwb_rd;
-        wire                   memwb_reg_write, memwb_mem_to_reg;
+        wire                   memwb_mem_to_reg;
 
         mem_wb_reg #(
                 .BUS_WIDTH  (BUS_WIDTH),
@@ -277,7 +322,8 @@ module core #(
         ) mem_wb_reg_inst (
                 .clk           (clk),
                 .rst           (rst),
-                .stall         (stall),
+                .stall         (1'b0),
+                .flush         (mem_stall),
 
                 .in_mem_out    (mem_out),
                 .in_alu_out    (mem_alu_out),
@@ -307,4 +353,11 @@ module core #(
         assign wb_en   = memwb_reg_write;
         assign wb_addr = memwb_rd;
 
-endmodule 
+	`ifndef SIMULATION
+	`else
+		bram_cell mem_instance (
+
+		);
+	`endif
+
+endmodule

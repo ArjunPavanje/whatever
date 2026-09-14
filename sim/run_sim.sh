@@ -10,6 +10,7 @@ echo "=== Compiling Assembly ==="
 riscv64-unknown-elf-gcc -march=rv64i -mabi=lp64 -nostdlib -nostartfiles -Ttext=0 -o "${REPO_ROOT}/tests/test.elf" "${REPO_ROOT}/tests/test.S"
 riscv64-unknown-elf-objcopy -O binary "${REPO_ROOT}/tests/test.elf" "${REPO_ROOT}/tests/test.bin"
 xxd -e -c 4 -g 4 "${REPO_ROOT}/tests/test.bin" | awk '{print $2}' > "${REPO_ROOT}/tests/program.hex"
+python3 "${REPO_ROOT}/sim/ref_sim.py" "${REPO_ROOT}/tests/program.hex" "${REPO_ROOT}/tests/expected_regs.hex"
 
 echo "=== Verilating ==="
 verilator \
@@ -43,6 +44,8 @@ verilator \
     "${REPO_ROOT}/core/regfile/regfile.v" \
     "${REPO_ROOT}/core/stages/immgen.v" \
     "${REPO_ROOT}/core/stages/branch_unit.v" \
+    "${REPO_ROOT}/core/stages/forwarding_unit.v" \
+    "${REPO_ROOT}/core/stages/hazard_detecting_unit.v" \
     "${REPO_ROOT}/core/stages/ex_stage.v" \
     "${REPO_ROOT}/core/stages/id_stage.v" \
     "${REPO_ROOT}/core/stages/if_stage.v" \

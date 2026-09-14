@@ -50,7 +50,6 @@ VL_MODULE(Vcore_regfile) {
     void _ctor_var_reset() VL_ATTR_COLD;
   public:
     static void _sequent__TOP__core__id_stage_inst__regfile_inst__1(Vcore__Syms* __restrict vlSymsp);
-    static void _sequent__TOP__core__id_stage_inst__regfile_inst__2(Vcore__Syms* __restrict vlSymsp);
   private:
     static void traceInit(void* userp, VerilatedVcd* tracep, uint32_t code) VL_ATTR_COLD;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);

@@ -27,9 +27,19 @@ VL_MODULE(Vcore_id_stage) {
     VL_IN8(__PVT__rst,0,0);
     VL_IN8(__PVT__wb_en,0,0);
     VL_IN8(__PVT__wb_addr,4,0);
+    VL_IN8(__PVT__idex_rd,4,0);
+    VL_IN8(__PVT__idex_reg_write,0,0);
+    VL_IN8(__PVT__idex_mem_read,0,0);
+    VL_IN8(__PVT__exmem_rd,4,0);
+    VL_IN8(__PVT__exmem_reg_write,0,0);
+    VL_IN8(__PVT__exmem_mem_to_reg,0,0);
     VL_OUT8(__PVT__alu_sel,4,0);
     VL_OUT8(__PVT__alu_src,0,0);
     VL_OUT8(__PVT__rd_addr,4,0);
+    VL_OUT8(__PVT__rs1_addr,4,0);
+    VL_OUT8(__PVT__rs2_addr,4,0);
+    VL_OUT8(__PVT__use_rs1,0,0);
+    VL_OUT8(__PVT__use_rs2,0,0);
     VL_OUT8(__PVT__reg_write,0,0);
     VL_OUT8(__PVT__mem_read,0,0);
     VL_OUT8(__PVT__mem_write,0,0);
@@ -41,6 +51,9 @@ VL_MODULE(Vcore_id_stage) {
     VL_IN(__PVT__instr,31,0);
     VL_IN64(__PVT__wb_data,63,0);
     VL_IN64(__PVT__pc,63,0);
+    VL_IN64(__PVT__ex_out,63,0);
+    VL_IN64(__PVT__exmem_alu_out,63,0);
+    VL_IN64(__PVT__mem_out,63,0);
     VL_OUT64(__PVT__in1,63,0);
     VL_OUT64(__PVT__in2,63,0);
     VL_OUT64(__PVT__imm,63,0);
@@ -63,11 +76,12 @@ VL_MODULE(Vcore_id_stage) {
     
     // INTERNAL METHODS
     void __Vconfigure(Vcore__Syms* symsp, bool first);
+    static void _combo__TOP__core__id_stage_inst__3(Vcore__Syms* __restrict vlSymsp);
   private:
     void _ctor_var_reset() VL_ATTR_COLD;
   public:
     static void _sequent__TOP__core__id_stage_inst__1(Vcore__Syms* __restrict vlSymsp);
-    static void _sequent__TOP__core__id_stage_inst__2(Vcore__Syms* __restrict vlSymsp);
+    static void _settle__TOP__core__id_stage_inst__2(Vcore__Syms* __restrict vlSymsp) VL_ATTR_COLD;
   private:
     static void traceInit(void* userp, VerilatedVcd* tracep, uint32_t code) VL_ATTR_COLD;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);

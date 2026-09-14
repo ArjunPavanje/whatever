@@ -9,6 +9,10 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstring>
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string>
 
 static uint64_t sim_time = 0;
 #if VM_TRACE
@@ -33,25 +37,6 @@ static uint64_t read_reg(Vcore* dut, int idx) {
     return dut->core->id_stage_inst->regfile_inst->reg_file[idx];
 }
 
-static uint8_t read_dmem(Vcore* dut, int byte_idx) {
-    return dut->core->__PVT__mem_stage_inst__DOT__mem[byte_idx];
-}
-
-static int pass_count = 0, fail_count = 0;
-
-static void check(const char* name, uint64_t got, uint64_t expected) {
-    if (got == expected) {
-        printf("[PASS] %-20s  got=0x%016llX\n", name, (unsigned long long)got);
-        pass_count++;
-    } else {
-        printf("[FAIL] %-20s  got=0x%016llX  expected=0x%016llX\n",
-               name,
-               (unsigned long long)got,
-               (unsigned long long)expected);
-        fail_count++;
-    }
-}
-
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
 
@@ -64,23 +49,67 @@ int main(int argc, char** argv) {
     tfp->open("sim/core_trace.vcd");
 #endif
 
+    // Load expected register values generated dynamically from reference simulation
+    std::vector<uint64_t> expected_regs(32, 0);
+    std::ifstream hex_in("tests/expected_regs.hex");
+    if (hex_in.is_open()) {
+        std::string line;
+        int idx = 0;
+        while (std::getline(hex_in, line) && idx < 32) {
+            if (!line.empty()) {
+                expected_regs[idx] = std::stoull(line, nullptr, 16);
+                idx++;
+            }
+        }
+        hex_in.close();
+    }
+
     dut->rst = 1;
     dut->clk = 0;
     for (int i = 0; i < 5; i++) tick(dut);
     dut->rst = 0;
 
-    for (int i = 0; i < 60; i++) tick(dut);
+    // Run simulation until PC halts (self-loop) or max cycle count reached
+    uint64_t prev_pc = 0xFFFFFFFFFFFFFFFFULL;
+    int same_pc_count = 0;
+    int max_cycles = 500;
 
-    printf("\n=== Register file checks ===\n");
-    check("x1 (10)",         read_reg(dut, 1), 10);
-    check("x2 (20)",         read_reg(dut, 2), 20);
-    check("x3 (10+20)",      read_reg(dut, 3), 30);
-    check("x4 (10-20)",      read_reg(dut, 4), 0xFFFFFFFFFFFFFFF6ULL);
-    check("x5 (10<<20)",     read_reg(dut, 5), 10485760);
-    check("x6 (30+10)",      read_reg(dut, 6), 40);
-    check("x7 (LD 10<<20)",  read_reg(dut, 7), 10485760);
+    for (int i = 0; i < max_cycles; i++) {
+        tick(dut);
+        uint64_t curr_pc = dut->core->__PVT__ifid_pc;
+        if (curr_pc == prev_pc) {
+            same_pc_count++;
+            if (same_pc_count >= 10) {
+                // Program reached infinite self-loop / halt
+                break;
+            }
+        } else {
+            same_pc_count = 0;
+            prev_pc = curr_pc;
+        }
+    }
 
-    printf("\n=== Summary: %d passed, %d failed ===\n\n", pass_count, fail_count);
+    int pass_count = 0, fail_count = 0;
+    printf("\n============================ Register File State (x0 - x31) ============================\n");
+    printf("%-6s  %-20s  %-20s  %-8s\n", "Reg", "Hardware Value", "Expected Value", "Status");
+    printf("----------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < 32; i++) {
+        uint64_t got = read_reg(dut, i);
+        uint64_t exp = expected_regs[i];
+        bool ok = (got == exp);
+        if (ok) pass_count++;
+        else fail_count++;
+
+        printf("x%-5d  0x%016llX    0x%016llX    [%s]\n",
+               i,
+               (unsigned long long)got,
+               (unsigned long long)exp,
+               ok ? "PASS" : "FAIL");
+    }
+
+    printf("========================================================================================\n");
+    printf("Summary: %d passed, %d failed out of 32 registers\n\n", pass_count, fail_count);
 
     dut->final();
 #if VM_TRACE

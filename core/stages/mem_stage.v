@@ -11,7 +11,8 @@ module mem_stage #(
     	input wire [BUS_WIDTH-1:0] write_data,
     	input wire [BUS_WIDTH-1:0] addr,
     	output wire [BUS_WIDTH-1:0] mem_out,
-    	output wire [BUS_WIDTH-1:0] alu_out
+    	output wire [BUS_WIDTH-1:0] alu_out,
+    	output wire mem_stall
 );
 
     	localparam NUM_BYTES = BUS_WIDTH/8;
@@ -28,6 +29,12 @@ module mem_stage #(
 	
     	wire [DATA_MEM_LEN-1:0] byte_addr = addr[DATA_MEM_LEN-1:0];
 
+    	wire mem_op = (mem_read | mem_write) & !rst;
+    	reg  mem_busy;
+
+    	// 1-cycle stall during the first cycle of a memory operation (waiting for BRAM posedge)
+    	assign mem_stall = mem_op & !mem_busy;
+
 	`ifdef SIMULATION
     		reg [7:0] mem [0:(1<<DATA_MEM_LEN)-1];
 
@@ -35,25 +42,31 @@ module mem_stage #(
         		$readmemh("tests/data.hex", mem);
     		end
 
-		// NOTE: read happens unconditionally every cycle (harmless for a plain
-		// reg array). If this is ever swapped for a BRAM primitive with real
-		// read-enable semantics, gate byte_addr itself on mem_read, not just
-		// the output mux below.
-		integer i;
-		always @(posedge clk) begin
-			if (!rst && mem_write) begin
-				for (i = 0; i < NUM_BYTES; i = i + 1) begin
-				    if (i < access_bytes) mem[byte_addr + i] <= write_data[i*8 +: 8];
-				end
-			end
-		end
-
 		reg [BUS_WIDTH-1:0] raw_read;
-		integer j;
-		always @(*) begin
-			raw_read = {BUS_WIDTH{1'b0}};
-			for (j = 0; j < NUM_BYTES; j = j + 1) begin
-				if (j < access_bytes) raw_read[j*8 +: 8] = mem[byte_addr + j];
+		integer i, j;
+
+		// Synchronous BRAM model: read/write latch on posedge clk
+		always @(posedge clk) begin
+			if (rst) begin
+				mem_busy <= 1'b0;
+				raw_read <= {BUS_WIDTH{1'b0}};
+			end else begin
+				if (mem_op && !mem_busy) begin
+					mem_busy <= 1'b1;
+					if (mem_write) begin
+						for (i = 0; i < NUM_BYTES; i = i + 1) begin
+							if (i < access_bytes) mem[byte_addr + i] <= write_data[i*8 +: 8];
+						end
+					end
+					if (mem_read) begin
+						for (j = 0; j < NUM_BYTES; j = j + 1) begin
+							if (j < access_bytes) raw_read[j*8 +: 8] <= mem[byte_addr + j];
+							else raw_read[j*8 +: 8] <= 8'h00;
+						end
+					end
+				end else begin
+					mem_busy <= 1'b0;
+				end
 			end
 		end
 
@@ -94,7 +107,11 @@ module mem_stage #(
 		assign mem_out = (mem_read && !rst) ? extended : {BUS_WIDTH{1'b0}};
 	`else
     		// Vivado Block Memory Generator IP goes here.
-    		// Stub to keep mem_out driven until the IP is instantiated.
+    		always @(posedge clk) begin
+			if (rst) mem_busy <= 1'b0;
+			else if (mem_op && !mem_busy) mem_busy <= 1'b1;
+			else mem_busy <= 1'b0;
+		end
     		assign mem_out = {BUS_WIDTH{1'b0}};
 	`endif
 

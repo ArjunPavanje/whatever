@@ -17,6 +17,7 @@ module ex_mem_reg#(
 	input wire clk,
 	input wire rst,
 	input wire stall,
+	input wire flush,
 
 	// From EX stage
 	input wire in_mem_write,
@@ -43,7 +44,7 @@ module ex_mem_reg#(
 
 );
 	always @(posedge clk) begin
-                if(rst) begin
+                if(rst || flush) begin
                         out_mem_write <= 1'b0;
                         out_mem_read <= 1'b0;
                         out_write_data <= {BUS_WIDTH{1'b0}};
@@ -54,7 +55,7 @@ module ex_mem_reg#(
                         out_reg_write  <= 1'b0;
                         out_mem_to_reg <= 1'b0;
                 end
-                else begin
+                else if(!stall) begin
                         out_mem_write <= in_mem_write;
                         out_mem_read <= in_mem_read;
                         out_write_data <= in_write_data;

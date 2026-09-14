@@ -36,7 +36,7 @@ VL_MODULE(Vcore) {
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     CData/*0:0*/ __Vclklast__TOP__clk;
-    CData/*0:0*/ __Vm_traceActivity[2];
+    CData/*0:0*/ __Vm_traceActivity[3];
     
     // INTERNAL VARIABLES
     // Internals; generally not touched by application code

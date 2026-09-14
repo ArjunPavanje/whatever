@@ -13,6 +13,7 @@
 * mem_read = read FROM memory
 * write_data = data to be written to memory
 * funct3 = funct3 from instruction
+* rs1, rs2 = register number of in1, in2 respectively
 * rd = destination register in the event of regfile write
 * reg_write = 1 implies write to regfile (0 otherwise)
 * mem_to_reg = 1 implies regfile write data from MEM not ALU (0 ALU)
@@ -27,6 +28,7 @@ module id_ex_reg#(
 	input wire clk,
 	input wire rst,
 	input wire stall,
+	input wire flush,
 
 	// From ID stage
 	input wire [INSTR_WIDTH-1:0] in_instr,
@@ -46,6 +48,8 @@ module id_ex_reg#(
 	input wire [BUS_WIDTH-1:0] in_write_data,
 
 	input wire [REGFILE_LEN-1:0] in_rd,
+	input wire [REGFILE_LEN-1:0] in_rs1,
+	input wire [REGFILE_LEN-1:0] in_rs2,
 	input wire in_reg_write,
 	input wire in_mem_to_reg,
 
@@ -67,12 +71,15 @@ module id_ex_reg#(
 	output reg [BUS_WIDTH-1:0] out_write_data,
 
 	output reg [REGFILE_LEN-1:0] out_rd,
+	output reg [REGFILE_LEN-1:0] out_rs1,
+	output reg [REGFILE_LEN-1:0] out_rs2,
 	output reg out_reg_write,
 	output reg out_mem_to_reg
 );
+	localparam NOP = 32'h00000013;
 	always @(posedge clk) begin
-                if(rst) begin
-                        out_instr <= {INSTR_WIDTH{1'b0}};
+                if(rst || flush) begin
+                        out_instr <= NOP;
 			out_funct3 <= 3'd0;
                         out_pc <= {BUS_WIDTH{1'b0}};
                         out_imm <= {BUS_WIDTH{1'b0}};
@@ -89,10 +96,12 @@ module id_ex_reg#(
                         out_write_data <= {BUS_WIDTH{1'b0}};
 
                         out_rd <= {REGFILE_LEN{1'b0}};
+                        out_rs1 <= {REGFILE_LEN{1'b0}};
+                        out_rs2 <= {REGFILE_LEN{1'b0}};
                         out_reg_write <= 1'b0;
                         out_mem_to_reg <= 1'b0;
                 end
-                else begin
+                else if(!stall) begin
                         out_instr <= in_instr;
 			out_funct3 <= in_funct3;
                         out_pc <= in_pc;
@@ -105,12 +114,13 @@ module id_ex_reg#(
 			out_is_lui <= in_is_lui;
 			out_is_auipc <= in_is_auipc;
 
-
                         out_mem_write <= in_mem_write;
                         out_mem_read <= in_mem_read;
                         out_write_data <= in_write_data;
 
                         out_rd <= in_rd;
+                        out_rs1 <= in_rs1;
+                        out_rs2 <= in_rs2;
                         out_reg_write <= in_reg_write;
                         out_mem_to_reg <= in_mem_to_reg;
                 end
