@@ -1,0 +1,38 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../../../../../Xilinx/2025.2/data/rsb/busdef" \
+"../../../../rv32imfd.ip_user_files/ip/bram_cell/sim/bram_cell.v" \
+"../../../../../core/alu/_and.v" \
+"../../../../../core/alu/_or.v" \
+"../../../../../core/alu/_xor.v" \
+"../../../../../core/alu/add.v" \
+"../../../../../core/alu/alu.v" \
+"../../../../../core/alu/alu_cntrl.v" \
+"../../../../../core/stages/branch_unit.v" \
+"../../../../../core/core.v" \
+"../../../../../core/pipeline/ex_mem_reg.v" \
+"../../../../../core/stages/ex_stage.v" \
+"../../../../../core/stages/forwarding_unit.v" \
+"../../../../../core/stages/hazard_detecting_unit.v" \
+"../../../../../core/pipeline/id_ex_reg.v" \
+"../../../../../core/stages/id_stage.v" \
+"../../../../../core/pipeline/if_id_reg.v" \
+"../../../../../core/stages/if_stage.v" \
+"../../../../../core/stages/immgen.v" \
+"../../../../../core/stages/mem_stage.v" \
+"../../../../../core/pipeline/mem_wb_reg.v" \
+"../../../../../core/alu/mul.v" \
+"../../../../../core/regfile/regfile.v" \
+"../../../../../core/alu/shift_left.v" \
+"../../../../../core/alu/shift_right.v" \
+"../../../../../core/alu/shift_right_arith.v" \
+"../../../../../core/alu/slt.v" \
+"../../../../../core/alu/sltu.v" \
+"../../../../../core/alu/sub.v" \
+"../../../../../core/stages/wb_stage.v" \
+"../../../../../core/tb_core.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

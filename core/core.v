@@ -17,6 +17,19 @@ module core #(
 );
 
         // ================================================================
+        // BRAM interface wires
+        // ── Port A (instruction fetch): core.v → if_stage ───────────────
+        // ── Port B (data memory):       core.v ↔ mem_stage ─────────────
+        // Declared here so both `ifndef/`else blocks and stage instantiations
+        // can reference them regardless of compile mode.
+        // ================================================================
+        wire [63:0]            bram_douta;  // Port A read data  → if_stage.bram_douta
+        wire [DATA_MEM_LEN-1:0] bram_addrb; // Port B address    ← mem_stage.bram_addr
+        wire [BUS_WIDTH/8-1:0]  bram_web;   // Port B byte-WE    ← mem_stage.bram_web
+        wire [BUS_WIDTH-1:0]    bram_wdata; // Port B write data ← mem_stage.bram_wdata
+        wire [BUS_WIDTH-1:0]    bram_rdata; // Port B read data  → mem_stage.bram_rdata
+
+        // ================================================================
         // Hazard Detection Unit & Stall Signals
         // ================================================================
         wire                   load_use_stall;
@@ -55,13 +68,14 @@ module core #(
                 .INSTR_WIDTH  (INSTR_WIDTH),
                 .INSTR_MEM_LEN(INSTR_MEM_LEN)
         ) if_stage_inst (
-                .clk    (clk),
-                .rst    (rst),
-                .stall  (pipeline_stall),
-                .pc_jmp (real_is_j),   // Routed from ID
-                .pc_dst (id_pc_dst),   // Routed from ID
-                .pc     (if_pc),
-                .instr  (if_instr)
+                .clk       (clk),
+                .rst       (rst),
+                .stall     (pipeline_stall),
+                .pc_jmp    (real_is_j),
+                .pc_dst    (id_pc_dst),
+                .bram_douta(bram_douta),   // Port A read data from bram_cell
+                .pc        (if_pc),
+                .instr     (if_instr)
         );
 
         // ================================================================
@@ -82,7 +96,7 @@ module core #(
                 .in_pc    (if_pc),
                 .in_instr (if_instr),
                 .out_pc   (ifid_pc),
-                .out_instr(ifid_instr)
+               .out_instr(ifid_instr)
         );
 
         // ================================================================
@@ -307,7 +321,12 @@ module core #(
                 .addr      (exmem_alu_out),
                 .mem_out   (mem_out),
                 .alu_out   (mem_alu_out),
-                .mem_stall (mem_stall)
+                .mem_stall (mem_stall),
+                // BRAM Port B
+                .bram_addr (bram_addrb),
+                .bram_web  (bram_web),
+                .bram_wdata(bram_wdata),
+                .bram_rdata(bram_rdata)
         );
 
         // ================================================================
@@ -353,11 +372,54 @@ module core #(
         assign wb_en   = memwb_reg_write;
         assign wb_addr = memwb_rd;
 
-	`ifndef SIMULATION
-	`else
-		bram_cell mem_instance (
+        // ================================================================
+        // bram_cell instantiation
+        //
+        // Port A — Instruction fetch (read-only)
+        //   Address strategy: present pc_next so that when pc_curr advances on
+        //   the clock edge, douta is already valid for the new PC (READ_LATENCY=1).
+        //   During stall or reset, re-present the current PC so the instruction
+        //   stays available without advancing the prefetch.
+        //
+        // Port B — Data memory (read/write)
+        //   Driven entirely by mem_stage via the bram_* wires above.
+        // ================================================================
+        `ifndef SIMULATION
+                // pc_next mirrors the combinational pc_next inside if_stage
+                wire [BUS_WIDTH-1:0] if_pc_next = real_is_j
+                                                 ? id_pc_dst
+                                                 : (if_pc + {{(BUS_WIDTH-3){1'b0}}, 3'd4});
 
-		);
-	`endif
+                // Hold current PC on stall or rst so BRAM re-presents the same word;
+                // otherwise prefetch the next PC.
+                //wire [14:0] bram_addra = (pipeline_stall || rst)
+                //                       ? if_pc[14:0]
+                //                       : if_pc_next[14:0];
+		wire [14:0] bram_addra = (pipeline_stall || rst)
+                               ? {3'b000, if_pc[14:3]}
+                               : {3'b000, if_pc_next[14:3]};	
+                bram_cell mem_instance (
+                        // ── Port A : Instruction fetch ──────────────────────────────
+                        .clka  (clk),
+                        .ena   (1'b1),
+                        .wea   (8'h00),       // read-only
+                        .addra (bram_addra),
+                        .dina  (64'h0),
+                        .douta (bram_douta),  // → if_stage.bram_douta
 
-endmodule
+                        // ── Port B : Data memory ─────────────────────────────────────
+                        .clkb  (clk),
+                        .enb   (exmem_mem_read | exmem_mem_write),
+                        .web   (bram_web),    // ← mem_stage.bram_web
+                        .addrb (bram_addrb),  // ← mem_stage.bram_addr
+                        .dinb  (bram_wdata),  // ← mem_stage.bram_wdata
+                        .doutb (bram_rdata)   // → mem_stage.bram_rdata
+                );
+        `else
+                // Simulation: if_stage and mem_stage use their own `ifdef SIMULATION
+                // reg arrays.  Tie the BRAM output wires to 0 so the ports are driven.
+                assign bram_douta = 64'b0;
+                assign bram_rdata = {BUS_WIDTH{1'b0}};
+        `endif
+
+endmodule 

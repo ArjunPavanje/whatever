@@ -1,0 +1,62 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/rv32imfd/rv32imfd.ip_user_files/ip/bram_cell/sim/bram_cell.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module bram_cell
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/_and.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module _and
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/_or.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module _or
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/_xor.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module _xor
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/add.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module add
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/alu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/alu_cntrl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu_cntrl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/branch_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module branch_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/core.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module core
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/pipeline/ex_mem_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ex_mem_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/ex_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ex_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/forwarding_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module forwarding_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/hazard_detecting_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hazard_detecting_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/pipeline/id_ex_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module id_ex_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/id_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module id_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/pipeline/if_id_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module if_id_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/if_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module if_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/immgen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module immgen
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/mem_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/pipeline/mem_wb_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem_wb_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/mul.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mul
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/regfile/regfile.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regfile
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/shift_left.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shift_left
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/shift_right.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shift_right
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/shift_right_arith.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shift_right_arith
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/slt.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module slt
+WARNING: [VRFC 10-8956] extra semicolon is not allowed here in this dialect; use SystemVerilog mode instead [/home/llamaglama/Documents/Github/whatever/core/alu/slt.v:9]
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/sltu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sltu
+WARNING: [VRFC 10-8956] extra semicolon is not allowed here in this dialect; use SystemVerilog mode instead [/home/llamaglama/Documents/Github/whatever/core/alu/sltu.v:9]
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/alu/sub.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sub
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/stages/wb_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module wb_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/llamaglama/Documents/Github/whatever/core/tb_core.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_core
